@@ -14,13 +14,15 @@ export default class HomePage extends React.PureComponent { // eslint-disable-li
   /**
    * when initial state username is not null, submit the form to load repos
    */
+  constructor(props) {
+    super(props);  
+  }
   componentDidMount() {
     const { username, onSubmitForm } = this.props;
     if (username && username.trim().length > 0) {
       onSubmitForm();
     }
   }
-
   render() {
     const {
       loading, error, repos, username, onChangeUsername, onSubmitForm
@@ -33,6 +35,7 @@ export default class HomePage extends React.PureComponent { // eslint-disable-li
 
     return (
       <article>
+    
         <Helmet>
           <title>Home Page</title>
           <meta name="description" content="A React.js Boilerplate application homepage" />
@@ -41,24 +44,13 @@ export default class HomePage extends React.PureComponent { // eslint-disable-li
           <section className="centered">
             <h2>Start your next react project in seconds</h2>
             <p>
-              A minimal <i>React-Redux</i> boilerplate with all the best practices
+              To enter details of a new <i>PROTODROP project</i> kindly fill the form. 
             </p>
           </section>
           <section>
             <h2>Try me!</h2>
-            <form onSubmit={onSubmitForm}>
-              <label htmlFor="username">
-                Show Github repositories by
-                <span className="at-prefix">@</span>
-                <input
-                  id="username"
-                  type="text"
-                  placeholder="flexdinesh"
-                  value={username}
-                  onChange={onChangeUsername}
-                />
-              </label>
-            </form>
+            <div>
+      </div>
             <ReposList {...reposListProps} />
           </section>
         </div>
