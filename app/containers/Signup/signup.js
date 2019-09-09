@@ -80,12 +80,13 @@ class SignUp extends Component {
     } = this.state;
     return (
       <div className="signup">
-        <form>
+        <form style = {{textAlign:'center'}}>
           <h1> SIGN UP HERE: </h1>
           <Input
             placeholder="First Name"
             id="firstName"
             value={firstName}
+            style={{width:'400px'}}
             onChange={(e) => this.setState({ firstName: e.target.value })}
           />
           <br />
@@ -94,6 +95,7 @@ class SignUp extends Component {
             placeholder="Last Name"
             id="lastName"
             value={lastName}
+            style={{width:'400px'}}
             onChange={(e) => this.setState({ lastName: e.target.value })}
           />
           <br />
@@ -102,20 +104,17 @@ class SignUp extends Component {
             placeholder="Enter your EmailID"
             id="emailID"
             value={emailId}
+            style={{width:'400px'}}
             onChange={(e) => this.setState({ emailId: e.target.value })}
             prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-            suffix={(
-<Tooltip title="Extra information">
-                <Icon type="info-circle" style={{ color: 'rgba(0,0,0,.45)' }} />
-              </Tooltip>
-)}
-          />
+           />
           <br />
           <br />
           <Input.Password
             placeholder="password"
             id="password"
             value={password}
+            style={{width:'400px'}}
             onChange={(e) => this.setState({ password: e.target.value })}
           />
           <br />
@@ -123,6 +122,7 @@ class SignUp extends Component {
           <Input.Password
             placeholder="confirm password"
             value={confirmpassword}
+            style={{width:'400px'}}
             onChange={(e) => this.setState({ confirmpassword: e.target.value })}
           />
           <br />
