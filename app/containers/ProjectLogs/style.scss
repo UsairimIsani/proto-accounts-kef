@@ -1,19 +1,19 @@
-.feature-page {
-  h1 {
-    font-size: 2em;
-    margin-bottom: 0.25em;
+.main {
+  text-align: center;
+  padding: 5%;
+  strong {
+    font-size: 200%;
   }
-  
-  ul {
-    font-family: Georgia, Times, 'Times New Roman', serif;
-    padding-left: 1.75em;
+}
+.top-right {
+  text-align: right;
+}
 
-    li {
-      margin: 1em 0;
+.border {
+  border-bottom: 0.2px black solid;
+  padding: 5%;
+}
 
-      p.title {
-        font-weight: bold;
-      }
-    }
-  }
+.logs-box {
+  width: 60%;
 }

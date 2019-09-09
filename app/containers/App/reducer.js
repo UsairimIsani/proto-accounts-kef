@@ -62,7 +62,7 @@ function appReducer(state = initialState, action) {
     }
     // ============== ProjectLogs ============= //
     case 'PROJECT_LOG':
-      const { item, price, shop } = action;
+      const { item, price, shop, payments } = action;
       const projectList = state.projects;
       projectList
         .find(project => {
@@ -72,10 +72,14 @@ function appReducer(state = initialState, action) {
           item,
           price,
           shop,
+          payments,
           username: 'static username',
           date: new Date(),
           id: Math.random(),
         });
+      // ====================== //
+      // console.log(payments);
+
       return {
         ...state,
         projects: projectList,
