@@ -10,9 +10,11 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import { Switch, Route } from 'react-router-dom';
 
-import CreateProject from 'containers/HomePage/Loadable';
+
 import AddProjectLogs from 'containers/ProjectLogs/AddProjectLogs';
 import AllLogs from 'containers/ProjectLogs/AllLogs';
+import CreateProject from 'containers/Create/Modal';
+import FeaturePage from 'containers/FeaturePage/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
 import Header from 'components/Header';
 import Footer from 'components/Footer';
