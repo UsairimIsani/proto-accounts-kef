@@ -1,3 +1,4 @@
+/* eslint-disable react/button-has-type */
 /* eslint-disable no-else-return */
 /* eslint-disable react/no-access-state-in-setstate */
 /* eslint-disable object-curly-newline */
@@ -15,6 +16,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Select } from 'antd';
+
+import DeleteLog from './DeleteLog';
+
+import './style.scss';
 
 class AllLogs extends Component {
   state = {
@@ -44,8 +49,9 @@ class AllLogs extends Component {
   handleEachLog = logArray => {
     if (logArray.length) {
       return logArray.map(log => {
+        // console.log(log.payments);
         return (
-          <div key={log.id} style={{ 'border-bottom': '0.2px black double' }}>
+          <div key={log.id} className="border">
             Item: {log.item}
             <br />
             Price: {log.price}
@@ -56,7 +62,20 @@ class AllLogs extends Component {
             <br />
             at: {log.date.toLocaleTimeString()}
             <br />
-            by: {log.username}
+            {log.payments ? (
+              log.payments.map(payer => {
+                return (
+                  <div key={Math.random()}>
+                    {payer.name} payed Rs
+                    {payer.amount}
+                  </div>
+                );
+              })
+            ) : (
+              <div style={{ color: 'red' }}>No payments!</div>
+            )}
+            <br />
+            logged by: {log.username}
           </div>
         );
       });
@@ -74,7 +93,7 @@ class AllLogs extends Component {
           'border-bottom': '1px black double',
         }}
       >
-        <strong style={{ 'font-size': '150%' }}>{project.title}</strong>
+        <strong>{project.title}</strong>
         {this.handleEachLog(project.logs)}
       </div>
     );
@@ -100,13 +119,15 @@ class AllLogs extends Component {
 
   render() {
     return (
-      <div>
+      <div className="main">
+        {/* <DeleteLog /> */}
+
         {/* filter button */}
-        <div>
+        <div className="top-right">
           <Select
             placeholder="Select a project"
             onChange={this.handleProjectFilter}
-            style={{ width: '50%' }}
+            style={{ width: '30%' }}
           >
             <Select.Option value="all">All</Select.Option>
             {this.projectFilterButton()}
@@ -114,7 +135,7 @@ class AllLogs extends Component {
         </div>
         {/* filter button */}
 
-        <div style={{ width: '70%' }}> {this.mapProjectLogs()}</div>
+        <div className="logs-box"> {this.mapProjectLogs()}</div>
       </div>
     );
   }

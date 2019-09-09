@@ -1,3 +1,4 @@
+/* eslint-disable react/no-access-state-in-setstate */
 /* eslint-disable object-curly-newline */
 /* eslint-disable lines-between-class-members */
 /* eslint-disable react/destructuring-assignment */
@@ -14,6 +15,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import 'antd/dist/antd.css';
 import { Form, Input, Button, Select } from 'antd';
+import Payments from './Payments';
 
 class AddProjectLogs extends React.Component {
   // eslint-disable-line react/prefer-stateless-function
@@ -23,6 +25,15 @@ class AddProjectLogs extends React.Component {
     price: '100',
     shop: '',
   };
+  // ============================= //
+
+  handlePayments = e => {
+    this.setState({
+      ...this.state,
+      payments: e,
+    });
+  };
+  // ============================= //
 
   selectProjectList = () => {
     const { projects } = this.props;
@@ -49,7 +60,9 @@ class AddProjectLogs extends React.Component {
   handleSubmit = e => {
     e.preventDefault();
     const { projectTitle, item, price, shop } = this.state;
-    this.props.addLog(projectTitle, item, price, shop);
+    //   this.state.payments.length ?(
+    // ):(alert('Empty Payments'))
+    this.props.addLog(projectTitle, item, price, shop, this.state.payments);
 
     // clear inputs (and state)
     this.setState({
@@ -103,6 +116,8 @@ class AddProjectLogs extends React.Component {
             required
             placeholder="eg: general electronics"
           />
+          <label>Payments</label>
+          <Payments handlePayments={this.handlePayments} />
           <Button type="primary" htmlType="submit">
             Submit
           </Button>
@@ -120,13 +135,14 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    addLog: (projectTitle, item, price, shop) => {
+    addLog: (projectTitle, item, price, shop, payments) => {
       dispatch({
         type: 'PROJECT_LOG',
         projectTitle,
         item,
         price,
         shop,
+        payments,
       });
     },
   };
