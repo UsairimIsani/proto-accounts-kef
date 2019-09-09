@@ -84,7 +84,7 @@ class Payments extends Component {
         })
       : null;
   };
-
+  
   render() {
     return (
       <div>

@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable react/button-has-type */
 /* eslint-disable no-else-return */
 /* eslint-disable react/no-access-state-in-setstate */
@@ -52,9 +53,12 @@ class AllLogs extends Component {
         // console.log(log.payments);
         return (
           <div key={log.id} className="border">
-            Item: {log.item}
+            Items:
+            {log.item.map((item, i) => {
+              return <span key={i}> {item} , </span>;
+            })}
             <br />
-            Price: {log.price}
+            Total Price: {log.price}
             <br />
             Shop: {log.shop}
             <br />

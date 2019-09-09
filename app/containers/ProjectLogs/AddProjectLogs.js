@@ -1,3 +1,5 @@
+/* eslint-disable radix */
+/* eslint-disable no-unused-expressions */
 /* eslint-disable react/no-access-state-in-setstate */
 /* eslint-disable object-curly-newline */
 /* eslint-disable lines-between-class-members */
@@ -10,6 +12,7 @@
 /* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable arrow-parens */
 /* eslint-disable react/prefer-stateless-function */
+// eslint-disable react/prefer-stateless-function
 
 import React from 'react';
 import { connect } from 'react-redux';
@@ -18,13 +21,14 @@ import { Form, Input, Button, Select } from 'antd';
 import Payments from './Payments';
 
 class AddProjectLogs extends React.Component {
-  // eslint-disable-line react/prefer-stateless-function
   state = {
-    projectTitle: 'first',
-    item: '',
+    projectTitle: this.props.projects[0].title,
+    item: [],
     price: '100',
     shop: '',
+    totalItems: 1,
   };
+
   // ============================= //
 
   handlePayments = e => {
@@ -52,6 +56,16 @@ class AddProjectLogs extends React.Component {
     );
   };
 
+  // =================== handlers ===================== //
+
+  handleItemChange = (e, index) => {
+    const updatedItem = this.state.item;
+    updatedItem[parseInt(index)] = e.target.value;
+    this.setState({
+      item: updatedItem,
+    });
+  };
+
   handleChange = e => {
     this.setState({
       [e.target.name]: e.target.value,
@@ -60,18 +74,47 @@ class AddProjectLogs extends React.Component {
   handleSubmit = e => {
     e.preventDefault();
     const { projectTitle, item, price, shop } = this.state;
-    //   this.state.payments.length ?(
-    // ):(alert('Empty Payments'))
     this.props.addLog(projectTitle, item, price, shop, this.state.payments);
 
-    // clear inputs (and state)
+    // reset inputs (and state)
     this.setState({
-      projectTitle: '',
-      item: '',
+      item: [],
       price: '',
       shop: '',
+      totalItems: 1,
+      clearPayment: true,
     });
   };
+
+  // ================ item inputs handlers ===================== //
+
+  handleTotalItems = e => {
+    this.setState({
+      totalItems: e.target.value,
+    });
+  };
+
+  handleNumberOfItems = () => {
+    let itemsInput = [];
+    for (let i = 0; i < this.state.totalItems; i++) {
+      const item = (
+        <Input
+          key={i}
+          name="item"
+          value={this.state.item[i]}
+          onChange={e => {
+            this.handleItemChange(e, i);
+          }}
+          allowClear
+          required
+        />
+      );
+      itemsInput = [...itemsInput, item];
+    }
+    return itemsInput;
+  };
+
+  // =============================== //
 
   render() {
     const projectList = this.selectProjectList();
@@ -90,19 +133,25 @@ class AddProjectLogs extends React.Component {
           >
             {projectList}
           </Select>
-          <label>Item Name</label>
+          <label>Number of Items</label>
           <Input
-            name="item"
-            value={this.state.item}
-            onChange={this.handleChange}
-            allowClear
+            type="number"
             required
+            defaultValue="1"
+            min="1"
+            value={this.state.totalItems}
+            onChange={this.handleTotalItems}
           />
-          <label>Price</label>
+          {/* Input for item names */}
+          <label>Item Name</label>
+          <div style={{ display: 'flex' }}> {this.handleNumberOfItems()}</div>
+
+          <label>Total Price</label>
           <Input
             type="number"
             name="price"
             value={this.state.price}
+            required
             onChange={this.handleChange}
             min={1}
             style={{ width: '100%' }}
@@ -118,14 +167,17 @@ class AddProjectLogs extends React.Component {
           />
           <label>Payments</label>
           <Payments handlePayments={this.handlePayments} />
+
           <Button type="primary" htmlType="submit">
-            Submit
+            Add Log
           </Button>
         </Form>
       </div>
     );
   }
 }
+
+// ==================================================== //
 
 const mapStateToProps = state => {
   return {
@@ -147,6 +199,8 @@ const mapDispatchToProps = dispatch => {
     },
   };
 };
+
+// ================================ //
 
 export default connect(
   mapStateToProps,
