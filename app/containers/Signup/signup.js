@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
- Input, Tooltip, Icon, Button, notification 
+ Input, Tooltip, Icon, Button, notification, DatePicker
 } from 'antd';
 
 class SignUp extends Component {
@@ -142,6 +142,7 @@ class SignUp extends Component {
       </div>
     );
   }
+
 }
 
 export default SignUp;
