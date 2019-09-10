@@ -17,10 +17,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Select } from 'antd';
-
-import DeleteLog from './DeleteLog';
-
 import './style.scss';
+
+// import DeleteLog from './DeleteLog';
 
 class AllLogs extends Component {
   state = {
@@ -50,7 +49,6 @@ class AllLogs extends Component {
   handleEachLog = logArray => {
     if (logArray.length) {
       return logArray.map(log => {
-        // console.log(log.payments);
         return (
           <div key={log.id} className="border">
             Items:
@@ -90,13 +88,7 @@ class AllLogs extends Component {
 
   handleLogs = project => {
     return (
-      <div
-        key={project.id}
-        style={{
-          color: 'black',
-          'border-bottom': '1px black double',
-        }}
-      >
+      <div key={project.id} className="projectLogs">
         <strong>{project.title}</strong>
         {this.handleEachLog(project.logs)}
       </div>
@@ -124,9 +116,7 @@ class AllLogs extends Component {
   render() {
     return (
       <div className="main">
-        {/* <DeleteLog /> */}
-
-        {/* filter button */}
+        {/* ============ filter button ========= */}
         <div className="top-right">
           <Select
             placeholder="Select a project"
@@ -137,7 +127,7 @@ class AllLogs extends Component {
             {this.projectFilterButton()}
           </Select>
         </div>
-        {/* filter button */}
+        {/* ====================  */}
 
         <div className="logs-box"> {this.mapProjectLogs()}</div>
       </div>

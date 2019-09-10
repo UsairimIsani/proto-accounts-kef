@@ -16,12 +16,19 @@ import { Select, Input } from 'antd';
 class Payments extends Component {
   state = {
     payments: [],
-    protoGang: [
-      { name: 'Anees Hashmi', username: 'aneeshashmi' },
-      { name: 'Shehryar Wasim', username: 'MSW' },
-      { name: 'Ubadah Tanveer', username: 'sotu' },
-    ],
+    protoGang: this.props.users,
   };
+
+  // this function is invoked in AddProjectLogs component using ref
+  clearInputs = () => {
+    // reseting stata after form submition
+    this.setState({
+      payments: [],
+      protoGang: this.props.users,
+    });
+  };
+
+  // =============================================== //
 
   mapDatasource = () => {
     const { protoGang } = this.state;
@@ -36,6 +43,28 @@ class Payments extends Component {
       : null;
   };
 
+  mapPayment = () => {
+    const { payments } = this.state;
+    return payments.length
+      ? payments.map(payer => {
+          return (
+            <div key={payer.username}>
+              <span> {payer.name}</span>
+              <Input
+                required
+                value={payer.amount}
+                type="number"
+                name={payer.username}
+                onChange={this.individualPaymentHandle}
+              />
+            </div>
+          );
+        })
+      : null;
+  };
+
+  // ============= Data handlers ================== //
+
   selectHandler = e => {
     const { protoGang, payments } = this.state;
     this.setState({
@@ -49,7 +78,6 @@ class Payments extends Component {
         return db.username !== e;
       }),
     });
-    // console.log(this.state.payments);
   };
 
   individualPaymentHandle = e => {
@@ -66,25 +94,6 @@ class Payments extends Component {
     this.props.handlePayments(this.state.payments);
   };
 
-  mapPayment = () => {
-    const { payments } = this.state;
-    return payments.length
-      ? payments.map(payer => {
-          return (
-            <div key={payer.username}>
-              {payer.name}
-              <Input
-                value={payer.amount}
-                type="number"
-                name={payer.username}
-                onChange={this.individualPaymentHandle}
-              />
-            </div>
-          );
-        })
-      : null;
-  };
-  
   render() {
     return (
       <div>
@@ -94,5 +103,7 @@ class Payments extends Component {
     );
   }
 }
+
+// ================================= //
 
 export default Payments;

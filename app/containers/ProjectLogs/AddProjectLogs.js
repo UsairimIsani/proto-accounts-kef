@@ -21,13 +21,18 @@ import { Form, Input, Button, Select } from 'antd';
 import Payments from './Payments';
 
 class AddProjectLogs extends React.Component {
-  state = {
-    projectTitle: this.props.projects[0].title,
-    item: [],
-    price: '100',
-    shop: '',
-    totalItems: 1,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      projectTitle: this.props.projects[0].title,
+      item: [],
+      price: '100',
+      shop: '',
+      totalItems: 1,
+    };
+    // using ref for clearing the payment inputs in Payments component
+    this.paymentsComponent = React.createRef();
+  }
 
   // ============================= //
 
@@ -71,19 +76,45 @@ class AddProjectLogs extends React.Component {
       [e.target.name]: e.target.value,
     });
   };
+
+  comparePrice = (totalPrice, payments) => {
+    let totalPayment = 0;
+    payments.forEach(payment => {
+      totalPayment += parseInt(payment.amount);
+    });
+    if (totalPayment !== totalPrice) {
+      alert('Price and payments not match');
+      return false;
+    }
+    return true;
+  };
+
   handleSubmit = e => {
     e.preventDefault();
     const { projectTitle, item, price, shop } = this.state;
-    this.props.addLog(projectTitle, item, price, shop, this.state.payments);
+    // payment details
+    const { payments } = this.paymentsComponent.current.state;
 
-    // reset inputs (and state)
-    this.setState({
-      item: [],
-      price: '',
-      shop: '',
-      totalItems: 1,
-      clearPayment: true,
-    });
+    // checking if payment details are added
+    if (
+      payments.length &&
+      this.comparePrice(parseInt(this.state.price), payments)
+    ) {
+      // log to redux store
+      this.props.addLog(projectTitle, item, price, shop, this.state.payments);
+      // reset inputs (and state)
+      this.setState({
+        item: [],
+        price: '',
+        shop: '',
+        totalItems: 1,
+        clearPayment: true,
+      });
+      // reset payment inputs using ref
+      this.paymentsComponent.current.clearInputs();
+    } else if (!payments.length) {
+      alert('Please add payment details');
+    }
   };
 
   // ================ item inputs handlers ===================== //
@@ -145,6 +176,7 @@ class AddProjectLogs extends React.Component {
           {/* Input for item names */}
           <label>Item Name</label>
           <div style={{ display: 'flex' }}> {this.handleNumberOfItems()}</div>
+          {/* ================  */}
 
           <label>Total Price</label>
           <Input
@@ -165,8 +197,14 @@ class AddProjectLogs extends React.Component {
             required
             placeholder="eg: general electronics"
           />
+          {/* payment component */}
           <label>Payments</label>
-          <Payments handlePayments={this.handlePayments} />
+          <Payments
+            handlePayments={this.handlePayments}
+            ref={this.paymentsComponent}
+            users={this.props.users}
+          />
+          {/* =============== */}
 
           <Button type="primary" htmlType="submit">
             Add Log
@@ -182,6 +220,8 @@ class AddProjectLogs extends React.Component {
 const mapStateToProps = state => {
   return {
     projects: state.global.projects,
+    // users details to be passed to Payment component
+    users: state.global.users,
   };
 };
 

@@ -29,6 +29,15 @@ export const initialState = {
       logs: [],
     },
   ],
+
+  // data from sign up should also be available here, to be used in ProjectLogs
+  // MSW has to add data here
+  // dummy data
+  users: [
+    { name: 'Anees Hashmi', username: 'aneeshashmi' },
+    { name: 'Shehryar Wasim', username: 'MSW' },
+    { name: 'Ubadah Tanveer', username: 'sotu' },
+  ],
 };
 
 function appReducer(state = initialState, action) {
