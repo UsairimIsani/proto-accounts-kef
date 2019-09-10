@@ -14,80 +14,64 @@
 /* eslint-disable react/prefer-stateless-function */
 
 import React, { Component } from 'react';
-import { Button, AutoComplete } from 'antd';
+import { Button } from 'antd';
+import { connect } from 'react-redux';
 
 class DeleteLog extends Component {
-  state = {
-  };
-  handleDelete = log => {
-    alert(log);
-  };
+  // state = {};
 
-  deleteLogButton = log => {
-    return (
-      <Button
-        type="danger"
-        ghost
-        size="small"
-        shape="round"
-        onClick={() => {
-          this.handleDelete(log);
-        }}
-      >
-        Delete
-      </Button>
-    );
+  handleDelete = () => {
+    let currentLog = this.props.projects.find(proj => {
+      return this.props.project.title === proj.title;
+    });
+    currentLog = currentLog.logs.filter(log => {
+      return log.id !== this.props.logId;
+    });
+    this.props.deleteLog(currentLog, this.props.project.title);
   };
 
-  //   ============================== //
-
-  //   handleChange = e => {
-  //     this.setState({
-  //       payment: [...this.state.payment, e],
-  //     });
-  //     e = '';
-  //   };
-
-  //   Complete = dataSource => {
-  //     return (
-  //       //      <select name="" id="">
-  //       <AutoComplete
-  //         onSelect={this.handleChange}
-  //         style={{ width: 200 }}
-  //         dataSource={dataSource}
-  //         placeholder="try to type `b`"
-  //         defaultValue="Anees"
-  //         filterOption={(inputValue, option) => {
-  //           return (
-  //             option.props.children
-  //               .toUpperCase()
-  //               .indexOf(inputValue.toUpperCase()) !== -1
-  //           );
-  //         }}
-  //       />
-  //       //    </select>
-  //     );
-  //   };
-
-  //   mapPayments = () => {
-  //     return this.state.payment.length
-  //       ? this.state.payment.map(pay => {
-  //           return <div key={Math.random()}>{pay}</div>;
-  //         })
-  //       : null;
-  //   };
-
-  //  =========================== //
   render() {
-    // const ;
     return (
       <div>
-        {/* {this.Complete(this.state.dataSource)} */}
-        {/* {this.mapPayments()} */}
-        {this.deleteLogButton('Itni Jaldi bhi kia he delete krne ki??')}
+        <Button
+          type="danger"
+          ghost
+          size="small"
+          shape="round"
+          onClick={() => {
+            this.handleDelete();
+          }}
+        >
+          Delete
+        </Button>
       </div>
     );
   }
 }
 
-export default DeleteLog;
+// =============== Redux =============== //
+
+const mapStateToProps = state => {
+  return {
+    projects: state.global.projects,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    deleteLog: (updatedLogs, projectTitle) => {
+      dispatch({
+        type: 'DELETE_LOG',
+        updatedLogs,
+        projectTitle,
+      });
+    },
+  };
+};
+
+// ========================== //
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(DeleteLog);

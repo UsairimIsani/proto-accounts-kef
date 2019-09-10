@@ -19,7 +19,7 @@ import { connect } from 'react-redux';
 import { Select } from 'antd';
 import './style.scss';
 
-// import DeleteLog from './DeleteLog';
+import DeleteLog from './DeleteLog';
 
 class AllLogs extends Component {
   state = {
@@ -46,7 +46,8 @@ class AllLogs extends Component {
 
   //   =============== Logs ============= //
 
-  handleEachLog = logArray => {
+  handleEachLog = project => {
+    let logArray = project.logs;
     if (logArray.length) {
       return logArray.map(log => {
         return (
@@ -77,6 +78,9 @@ class AllLogs extends Component {
               <div style={{ color: 'red' }}>No payments!</div>
             )}
             <br />
+            {/* props passed in order to delete them */}
+            <DeleteLog logId={log.id} project={project} />
+            <br />
             logged by: {log.username}
           </div>
         );
@@ -90,7 +94,7 @@ class AllLogs extends Component {
     return (
       <div key={project.id} className="projectLogs">
         <strong>{project.title}</strong>
-        {this.handleEachLog(project.logs)}
+        {this.handleEachLog(project)}
       </div>
     );
   };
@@ -114,6 +118,8 @@ class AllLogs extends Component {
   //  ================================ //
 
   render() {
+    console.log('all projects');
+
     return (
       <div className="main">
         {/* ============ filter button ========= */}

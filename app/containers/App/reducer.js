@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 /* eslint-disable arrow-parens */
 /* eslint-disable no-case-declarations */
 import { LOAD_REPOS_SUCCESS, LOAD_REPOS, LOAD_REPOS_ERROR } from './constants';
@@ -86,12 +87,23 @@ function appReducer(state = initialState, action) {
           date: new Date(),
           id: Math.random(),
         });
-      // ====================== //
-      // console.log(payments);
 
       return {
         ...state,
         projects: projectList,
+      };
+    // ========== Delete logs ============ //
+
+    case 'DELETE_LOG':
+      const updatedProject = state.projects.find(proj => {
+        return action.projectTitle === proj.title;
+      });
+      const newState = state;
+      newState.projects[state.projects.indexOf(updatedProject)].logs =
+        action.updatedLogs;
+      return {
+        ...state,
+        projects: newState.projects,
       };
 
     default:
