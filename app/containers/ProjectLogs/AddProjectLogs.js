@@ -229,7 +229,7 @@ const mapDispatchToProps = dispatch => {
   return {
     addLog: (projectTitle, item, price, shop, payments) => {
       dispatch({
-        type: 'PROJECT_LOG',
+        type: 'ADD_PROJECT_LOG',
         projectTitle,
         item,
         price,

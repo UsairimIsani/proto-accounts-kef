@@ -18,16 +18,8 @@ import { Button } from 'antd';
 import { connect } from 'react-redux';
 
 class DeleteLog extends Component {
-  // state = {};
-
   handleDelete = () => {
-    let currentLog = this.props.projects.find(proj => {
-      return this.props.project.title === proj.title;
-    });
-    currentLog = currentLog.logs.filter(log => {
-      return log.id !== this.props.logId;
-    });
-    this.props.deleteLog(currentLog, this.props.project.title);
+    this.props.deleteLog(this.props.logId, this.props.projectTitle);
   };
 
   render() {
@@ -51,18 +43,12 @@ class DeleteLog extends Component {
 
 // =============== Redux =============== //
 
-const mapStateToProps = state => {
-  return {
-    projects: state.global.projects,
-  };
-};
-
 const mapDispatchToProps = dispatch => {
   return {
-    deleteLog: (updatedLogs, projectTitle) => {
+    deleteLog: (id, projectTitle) => {
       dispatch({
         type: 'DELETE_LOG',
-        updatedLogs,
+        id,
         projectTitle,
       });
     },
@@ -72,6 +58,6 @@ const mapDispatchToProps = dispatch => {
 // ========================== //
 
 export default connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps,
 )(DeleteLog);

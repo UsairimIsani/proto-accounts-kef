@@ -70,8 +70,9 @@ function appReducer(state = initialState, action) {
     case LOAD_REPOS_ERROR: {
       return { ...state, error: action.error, loading: false };
     }
+
     // ============== ProjectLogs ============= //
-    case 'PROJECT_LOG':
+    case 'ADD_PROJECT_LOG':
       const { item, price, shop, payments } = action;
       const projectList = state.projects;
       projectList
@@ -95,16 +96,17 @@ function appReducer(state = initialState, action) {
     // ========== Delete logs ============ //
 
     case 'DELETE_LOG':
-      const updatedProject = state.projects.find(proj => {
+      const currentProject = state.projects.find(proj => {
         return action.projectTitle === proj.title;
       });
       const newState = state;
-      newState.projects[state.projects.indexOf(updatedProject)].logs =
-        action.updatedLogs;
-      return {
-        ...state,
-        projects: newState.projects,
-      };
+      const index = state.projects.indexOf(currentProject);
+      const updatedLogsArray = newState.projects[index].logs.filter(
+        log => log.id !== action.id,
+      );
+
+      newState.projects[index].logs = updatedLogsArray;
+      return newState;
 
     default:
       return state;

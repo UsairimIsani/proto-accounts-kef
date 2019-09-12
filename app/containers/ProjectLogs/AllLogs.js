@@ -79,7 +79,9 @@ class AllLogs extends Component {
             )}
             <br />
             {/* props passed in order to delete them */}
-            <DeleteLog logId={log.id} project={project} />
+            <DeleteLog logId={log.id} projectTitle={project.title} />
+            <br />
+            {/* <EditLog logId={log.id} projectTitle={project.title} /> */}
             <br />
             logged by: {log.username}
           </div>
@@ -118,8 +120,6 @@ class AllLogs extends Component {
   //  ================================ //
 
   render() {
-    console.log('all projects');
-
     return (
       <div className="main">
         {/* ============ filter button ========= */}
@@ -134,7 +134,6 @@ class AllLogs extends Component {
           </Select>
         </div>
         {/* ====================  */}
-
         <div className="logs-box"> {this.mapProjectLogs()}</div>
       </div>
     );
@@ -149,4 +148,15 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(AllLogs);
+// const areStatesEqual = (prevState, newState) => {
+//   const result =
+//     prevState.global.projects[0].logs === newState.global.projects[0].logs;
+//   return result;
+// };
+
+export default connect(
+  mapStateToProps,
+  // null,
+  // null,
+  // { areStatesEqual },
+)(AllLogs);
