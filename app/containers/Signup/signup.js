@@ -1,17 +1,20 @@
 import React, { Component } from 'react';
 import {
- Input, Tooltip, Icon, Button, notification 
+  Input, Icon, Button, notification
 } from 'antd';
 
 class SignUp extends Component {
- state = {
-   Users: [],
-   firstName: '',
-   lastName: '',
-   emailId: '',
-   password: '',
-   confirmpassword: '',
- };
+  constructor(props) {
+    super(props);
+    this.state = {
+      Users: [],
+      firstName: '',
+      lastName: '',
+      emailId: '',
+      password: '',
+      confirmpassword: '',
+    };
+  }
 
   handleSignUp = () => {
     const {
@@ -20,7 +23,8 @@ class SignUp extends Component {
       emailId,
       password,
       confirmpassword,
-      Users,
+      // eslint-disable-next-line no-unused-vars
+      Users
     } = this.state;
     // eslint-disable-next-line no-unused-vars
     const user = {
@@ -29,44 +33,42 @@ class SignUp extends Component {
       emailId,
       password,
     };
-    const userFound = false;
-    if (!userFound) {
-      // const users = Users.slice();
-      // eslint-disable-next-line no-const-assign
-      const usersAdd = [...Users, user];
-      this.setState({ Users: usersAdd });
-      localStorage.setItem('users', JSON.stringify(usersAdd));
-    }
-
     if (password !== confirmpassword) {
       // eslint-disable-next-line no-alert
       alert("Passwords don't match");
     }
-    const isPresent = JSON.parse(localStorage.getItem('users'));
-    let found = false;
-    isPresent.forEach((element) => {
-      // eslint-disable-next-line no-console
-      console.log(element);
-      // eslint-disable-next-line react/destructuring-assignment
-      if (element.emailId === this.state.emailId) {
-        found = !found;
-      }
-    });
-    if (found) {
-      // eslint-disable-next-line no-restricted-globals
+    const localUsers = JSON.parse(localStorage.getItem('users'));
+
+    let userExist = false;
+    if (localUsers.length) {
+      localUsers.forEach((element) => {
+        if (element.emailId === emailId) {
+          userExist = true;
+          setTimeout(() => {
+            notification.open({
+              message: 'USER EXIST',
+              description:
+                'User already exist, proceed to Signin.',
+              style: {
+                width: 600,
+                marginLeft: 335 - 600,
+              },
+            });
+          }, 1000);
+          setTimeout(() => {
+            // eslint-disable-next-line no-restricted-globals
+            location.replace('/signin');
+          }, 2000);
+        }
+      });
+    }
+    if (!userExist) {
+      localUsers.push(user);
+      localStorage.setItem('users', JSON.stringify(localUsers));
       setTimeout(() => {
-        notification.open({
-          message: 'Notification Title',
-          description:
-            'This is the content of the notification. This is the content of the notification. This is the content of the notification.',
-          style: {
-            width: 600,
-            marginLeft: 335 - 600,
-          },
-        });
         // eslint-disable-next-line no-restricted-globals
         location.replace('/signin');
-      }, 4000);
+      }, 1000);
     }
   };
 
@@ -80,13 +82,13 @@ class SignUp extends Component {
     } = this.state;
     return (
       <div className="signup">
-        <form style = {{textAlign:'center'}}>
+        <form style={{ textAlign: 'center' }}>
           <h1> SIGN UP HERE: </h1>
           <Input
             placeholder="First Name"
             id="firstName"
             value={firstName}
-            style={{width:'400px'}}
+            style={{ width: '400px' }}
             onChange={(e) => this.setState({ firstName: e.target.value })}
           />
           <br />
@@ -95,7 +97,7 @@ class SignUp extends Component {
             placeholder="Last Name"
             id="lastName"
             value={lastName}
-            style={{width:'400px'}}
+            style={{ width: '400px' }}
             onChange={(e) => this.setState({ lastName: e.target.value })}
           />
           <br />
@@ -104,17 +106,17 @@ class SignUp extends Component {
             placeholder="Enter your EmailID"
             id="emailID"
             value={emailId}
-            style={{width:'400px'}}
+            style={{ width: '400px' }}
             onChange={(e) => this.setState({ emailId: e.target.value })}
             prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-           />
+          />
           <br />
           <br />
           <Input.Password
             placeholder="password"
             id="password"
             value={password}
-            style={{width:'400px'}}
+            style={{ width: '400px' }}
             onChange={(e) => this.setState({ password: e.target.value })}
           />
           <br />
@@ -122,7 +124,7 @@ class SignUp extends Component {
           <Input.Password
             placeholder="confirm password"
             value={confirmpassword}
-            style={{width:'400px'}}
+            style={{ width: '400px' }}
             onChange={(e) => this.setState({ confirmpassword: e.target.value })}
           />
           <br />
