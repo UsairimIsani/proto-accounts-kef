@@ -30,6 +30,7 @@ class AddProjectLogs extends React.Component {
       shop: '',
       totalItems: 1,
     };
+    this.initState = this.state;
     // using ref for clearing the payment inputs in Payments component
     this.paymentsComponent = React.createRef();
   }
@@ -101,13 +102,7 @@ class AddProjectLogs extends React.Component {
       // log to redux store
       this.props.addLog(projectTitle, item, price, shop, this.state.payments);
       // reset inputs (and state)
-      this.setState({
-        item: [],
-        price: '',
-        shop: '',
-        totalItems: 1,
-        clearPayment: true,
-      });
+      this.setState(this.initState);
       // reset payment inputs using ref
       this.paymentsComponent.current.clearInputs();
     } else if (!payments.length) {

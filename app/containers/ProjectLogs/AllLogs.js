@@ -53,38 +53,61 @@ class AllLogs extends Component {
       return logArray.map(log => {
         return (
           <div key={log.id} className="border">
-            Items:
-            {log.item.map((item, i) => {
-              return <span key={i}> {item} , </span>;
-            })}
-            <br />
-            Total Price: {log.price}
-            <br />
-            Shop: {log.shop}
-            <br />
-            last modified:{' '}
-            <span>
-              {log.date.toDateString()} at: {log.date.toLocaleTimeString()}
-            </span>
-            {log.payments ? (
-              log.payments.map(payer => {
-                return (
-                  <div key={Math.random()}>
-                    {payer.name} payed Rs
-                    {payer.amount}
-                  </div>
-                );
-              })
-            ) : (
-              <div style={{ color: 'red' }}>No payments!</div>
-            )}
-            <br />
+            <div className="log-details">
+              <div> Items:</div>
+              <span>
+                {log.item.map((item, i) => {
+                  return <span key={i}> {item} , </span>;
+                })}
+              </span>
+            </div>
+            <hr />
+            <div className="log-details">
+              <div>Total Price:</div> <span>{log.price}</span>
+            </div>
+            <div className="log-details">
+              <div> Shop:</div> <span> {log.shop}</span>
+            </div>
+            <hr />
+            <div className="log-details">
+              <div> last modified:</div>
+              <span>
+                {log.date.toDateString()} <br /> at:{' '}
+                {log.date.toLocaleTimeString()}
+              </span>
+            </div>
+            <hr />
+            <div className="log-details">
+              <div> Payments: </div>
+              <span>
+                {log.payments ? (
+                  log.payments.map(payer => {
+                    return (
+                      <p key={Math.random()} style={{ margin: '0' }}>
+                        {payer.name} payed Rs {payer.amount}
+                      </p>
+                    );
+                  })
+                ) : (
+                  <div style={{ color: 'red' }}>No payments!</div>
+                )}
+              </span>
+            </div>
+            <hr />
+            <div className="log-details">
+              <div>Logged by:</div>
+              <span>{log.username}</span>
+            </div>
+            <hr />
             {/* props passed in order to delete them */}
-            <DeleteLog logId={log.id} projectTitle={project.title} />
-            <br />
-            <EditLog logId={log.id} projectTitle={project.title} />
-            <br />
-            logged by: {log.username}
+            <div style={{ display: 'flex' }}>
+              <div style={{ width: '50%' }}>
+                <DeleteLog log={log} projectTitle={project.title} />
+              </div>
+              <div style={{ width: '50%' }}>
+                <EditLog log={log} projectTitle={project.title} />
+              </div>
+            </div>
           </div>
         );
       });
@@ -96,7 +119,7 @@ class AllLogs extends Component {
   handleLogs = project => {
     return (
       <div key={project.id} className="projectLogs">
-        <strong>{project.title}</strong>
+        <h1 className="projectTitle">{project.title.toUpperCase()}</h1>
         {this.handleEachLog(project)}
       </div>
     );
@@ -122,20 +145,23 @@ class AllLogs extends Component {
 
   render() {
     return (
-      <div className="main">
-        {/* ============ filter button ========= */}
-        <div className="top-right">
+      <div>
+        <div className="head">
+          <h2> Proto Logs </h2>
+          {/* ============ filter button ========= */}
           <Select
+            className="selectTag"
             placeholder="Select a project"
             onChange={this.handleProjectFilter}
-            style={{ width: '30%' }}
           >
             <Select.Option value="all">All</Select.Option>
             {this.projectFilterButton()}
           </Select>
         </div>
-        {/* ====================  */}
-        <div className="logs-box"> {this.mapProjectLogs()}</div>
+        <div className="main">
+          {/* ====================  */}
+          <div> {this.mapProjectLogs()}</div>
+        </div>
       </div>
     );
   }

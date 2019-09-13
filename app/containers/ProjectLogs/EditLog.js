@@ -28,8 +28,10 @@ class EditLog extends Component {
     this.state = {
       modalVisible: false,
       enableEdit: false,
+      item: this.props.log.item,
+      shop: this.props.log.shop,
       payments: [],
-      price: 100,
+      price: this.props.log.price,
     };
     this.baseState = this.state;
 
@@ -63,7 +65,7 @@ class EditLog extends Component {
       payments.length &&
       this.comparePrice(parseInt(this.state.price), payments)
     ) {
-      const log = { item, price, shop, payments, id: this.props.logId };
+      const log = { item, price, shop, payments, id: this.props.log.id };
       this.props.editLog(this.props.projectTitle, log);
 
       // clear inputs
@@ -110,13 +112,26 @@ class EditLog extends Component {
           disabled
         />
         <label> Item name</label>
-        <Input
-          type="text"
-          name="item"
-          value={this.state.item}
-          onChange={this.handleChange}
-          required
-        />
+        {this.state.item.map((item, index) => {
+          return (
+            <Input
+              key={index}
+              type="text"
+              name="item"
+              value={this.state.item[index]}
+              onChange={e => {
+                const editedItem = this.state.item.filter(item => {
+                  return true;
+                });
+                editedItem[index] = e.target.value;
+                this.setState({
+                  item: editedItem,
+                });
+              }}
+              required
+            />
+          );
+        })}
         <label>Price</label>
         <Input
           type="number"

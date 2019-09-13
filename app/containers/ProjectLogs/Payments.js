@@ -11,7 +11,7 @@
 /* eslint-disable react/prefer-stateless-function */
 
 import React, { Component } from 'react';
-import { Select, Input } from 'antd';
+import { Select, Input, Button } from 'antd';
 
 class Payments extends Component {
   constructor(props) {
@@ -20,8 +20,10 @@ class Payments extends Component {
       payments: [],
       protoGang: this.props.users,
     };
+    this.protoGangCopy = this.props.users;
     this.baseState = this.state;
   }
+  // ========================= //
 
   // this function is invoked in parent component using ref
   clearInputs = () => {
@@ -51,13 +53,25 @@ class Payments extends Component {
           return (
             <div key={payer.username}>
               <span> {payer.name}</span>
-              <Input
-                required
-                value={payer.amount}
-                type="number"
-                name={payer.username}
-                onChange={this.handleIndividualPayment}
-              />
+              <div>
+                <Input
+                  style={{ width: '90%' }}
+                  required
+                  value={payer.amount}
+                  type="number"
+                  name={payer.username}
+                  onChange={this.handleIndividualPayment}
+                />
+                <Button
+                  style={{ width: '10%' }}
+                  type="danger"
+                  onClick={() => {
+                    this.handleDelete(payer.username);
+                  }}
+                >
+                  x
+                </Button>
+              </div>
             </div>
           );
         })
@@ -66,19 +80,38 @@ class Payments extends Component {
 
   // ============= Data handlers ================== //
 
+  handleDelete = username => {
+    // find the user that is deleted
+    let deletedPayer = this.state.payments.find(
+      payer => payer.username === username,
+    );
+    // restore deleted user details to user array
+    let restoreUser = this.protoGangCopy.find(
+      db => deletedPayer.username === db.username,
+    );
+
+    this.setState({
+      payments: this.state.payments.filter(
+        payer => payer.username !== username,
+      ),
+      protoGang: [...this.state.protoGang, restoreUser],
+    });
+  };
+
   handleSelect = e => {
     const { protoGang, payments } = this.state;
+    let newPayer = protoGang.find(db => {
+      return db.username === e;
+    });
+    newPayer.amount = 0;
+
     this.setState({
-      payments: [
-        ...payments,
-        protoGang.find(db => {
-          return db.username === e;
-        }),
-      ],
+      payments: [...payments, newPayer],
       protoGang: protoGang.filter(db => {
         return db.username !== e;
       }),
     });
+    this.props.handlePayments(this.state.payments);
   };
 
   handleIndividualPayment = e => {
@@ -94,6 +127,8 @@ class Payments extends Component {
     });
     this.props.handlePayments(this.state.payments);
   };
+
+  // ================================================== //
 
   render() {
     return (
