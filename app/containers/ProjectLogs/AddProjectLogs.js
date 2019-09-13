@@ -91,9 +91,7 @@ class AddProjectLogs extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    const { projectTitle, item, price, shop } = this.state;
-    // payment details
-    const { payments } = this.paymentsComponent.current.state;
+    const { projectTitle, item, price, shop, payments } = this.state;
 
     // checking if payment details are added
     if (
@@ -186,7 +184,6 @@ class AddProjectLogs extends React.Component {
             required
             onChange={this.handleChange}
             min={1}
-            style={{ width: '100%' }}
           />
           <label>Shop name</label>
           <Input

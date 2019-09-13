@@ -14,18 +14,19 @@ import React, { Component } from 'react';
 import { Select, Input } from 'antd';
 
 class Payments extends Component {
-  state = {
-    payments: [],
-    protoGang: this.props.users,
-  };
-
-  // this function is invoked in AddProjectLogs component using ref
-  clearInputs = () => {
-    // reseting stata after form submition
-    this.setState({
+  constructor(props) {
+    super(props);
+    this.state = {
       payments: [],
       protoGang: this.props.users,
-    });
+    };
+    this.baseState = this.state;
+  }
+
+  // this function is invoked in parent component using ref
+  clearInputs = () => {
+    // reseting stata after form submition
+    this.setState(this.baseState);
   };
 
   // =============================================== //
@@ -55,7 +56,7 @@ class Payments extends Component {
                 value={payer.amount}
                 type="number"
                 name={payer.username}
-                onChange={this.individualPaymentHandle}
+                onChange={this.handleIndividualPayment}
               />
             </div>
           );
@@ -65,7 +66,7 @@ class Payments extends Component {
 
   // ============= Data handlers ================== //
 
-  selectHandler = e => {
+  handleSelect = e => {
     const { protoGang, payments } = this.state;
     this.setState({
       payments: [
@@ -80,7 +81,7 @@ class Payments extends Component {
     });
   };
 
-  individualPaymentHandle = e => {
+  handleIndividualPayment = e => {
     const { payments } = this.state;
     const payer = payments.find(p => {
       return e.target.name === p.username;
@@ -97,7 +98,7 @@ class Payments extends Component {
   render() {
     return (
       <div>
-        <Select onSelect={this.selectHandler}>{this.mapDatasource()}</Select>
+        <Select onSelect={this.handleSelect}>{this.mapDatasource()}</Select>
         {this.mapPayment()}
       </div>
     );

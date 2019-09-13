@@ -74,12 +74,9 @@ function appReducer(state = initialState, action) {
     // ============== ProjectLogs ============= //
     case 'ADD_PROJECT_LOG':
       const { item, price, shop, payments } = action;
-      const projectList = state.projects;
-      projectList
-        .find(project => {
-          return action.projectTitle === project.title;
-        })
-        .logs.push({
+      const projectLists = state.projects.map(project => {
+        let projectLogs = [];
+        const newLog = {
           item,
           price,
           shop,
@@ -87,26 +84,67 @@ function appReducer(state = initialState, action) {
           username: 'static username',
           date: new Date(),
           id: Math.random(),
+        };
+        if (action.projectTitle === project.title) {
+          projectLogs = project.logs.filter(log => {
+            return true;
+          });
+        }
+        projectLogs.push(newLog);
+        return Object.assign({}, project, {
+          logs: projectLogs,
         });
+      });
+      return {
+        ...state,
+        projects: projectLists,
+      };
+
+    // ========== Delete logs ============ //
+    case 'DELETE_LOG':
+      const updatedProject = state.projects.map(project => {
+        let newLog = [];
+        if (action.projectTitle === project.title) {
+          newLog = project.logs.filter(log => {
+            return log.id !== action.id;
+          });
+        }
+        return Object.assign({}, project, {
+          logs: newLog,
+        });
+      });
+      return { ...state, projects: updatedProject };
+
+    // =============== Edit log ================= //
+    case 'EDIT_LOG':
+      const editedProject = state.projects.map(project => {
+        let newLog = [];
+        if (action.projectTitle === project.title) {
+          newLog = project.logs.filter(log => log.id !== action.log.id);
+          const { item, price, shop, payments } = action.log;
+          console.log(action.log);
+
+          const editedLog = {
+            item: [item],
+            price,
+            shop,
+            payments,
+            date: new Date(),
+            id: Math.random(),
+            username: 'static username',
+          };
+          newLog.push(editedLog);
+          // let sortedLog = newLog.sort((a, b) => a.date - b.log);
+        }
+        return Object.assign({}, project, {
+          logs: newLog,
+        });
+      });
 
       return {
         ...state,
-        projects: projectList,
+        projects: editedProject,
       };
-    // ========== Delete logs ============ //
-
-    case 'DELETE_LOG':
-      const currentProject = state.projects.find(proj => {
-        return action.projectTitle === proj.title;
-      });
-      const newState = state;
-      const index = state.projects.indexOf(currentProject);
-      const updatedLogsArray = newState.projects[index].logs.filter(
-        log => log.id !== action.id,
-      );
-
-      newState.projects[index].logs = updatedLogsArray;
-      return newState;
 
     default:
       return state;

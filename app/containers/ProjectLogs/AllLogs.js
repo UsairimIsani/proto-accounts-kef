@@ -20,6 +20,7 @@ import { Select } from 'antd';
 import './style.scss';
 
 import DeleteLog from './DeleteLog';
+import EditLog from './EditLog';
 
 class AllLogs extends Component {
   state = {
@@ -47,7 +48,7 @@ class AllLogs extends Component {
   //   =============== Logs ============= //
 
   handleEachLog = project => {
-    let logArray = project.logs;
+    const logArray = project.logs;
     if (logArray.length) {
       return logArray.map(log => {
         return (
@@ -61,10 +62,10 @@ class AllLogs extends Component {
             <br />
             Shop: {log.shop}
             <br />
-            On: {log.date.toDateString()}
-            <br />
-            at: {log.date.toLocaleTimeString()}
-            <br />
+            last modified:{' '}
+            <span>
+              {log.date.toDateString()} at: {log.date.toLocaleTimeString()}
+            </span>
             {log.payments ? (
               log.payments.map(payer => {
                 return (
@@ -81,7 +82,7 @@ class AllLogs extends Component {
             {/* props passed in order to delete them */}
             <DeleteLog logId={log.id} projectTitle={project.title} />
             <br />
-            {/* <EditLog logId={log.id} projectTitle={project.title} /> */}
+            <EditLog logId={log.id} projectTitle={project.title} />
             <br />
             logged by: {log.username}
           </div>
@@ -148,15 +149,15 @@ const mapStateToProps = state => {
   };
 };
 
-// const areStatesEqual = (prevState, newState) => {
-//   const result =
-//     prevState.global.projects[0].logs === newState.global.projects[0].logs;
-//   return result;
-// };
+const areStatesEqual = (prevState, newState) => {
+  const result =
+    prevState.global.projects[0].logs === newState.global.projects[0].logs;
+  return result;
+};
 
 export default connect(
   mapStateToProps,
-  // null,
-  // null,
-  // { areStatesEqual },
+  null,
+  null,
+  { areStatesEqual },
 )(AllLogs);
