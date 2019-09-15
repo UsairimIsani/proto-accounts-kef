@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './style.scss';
-import { DatePicker } from 'antd';
+// import { DatePicker } from 'antd';
 
 class Header extends React.Component {
   // eslint-disable-line react/prefer-stateless-function

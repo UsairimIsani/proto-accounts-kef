@@ -24,9 +24,10 @@ class DeleteLog extends Component {
 
   render() {
     return (
-      <div>
+      <div style={{ paddingBottom: '10%' }}>
         <Button
           type="danger"
+          size="small"
           ghost
           onClick={() => {
             this.handleDelete();

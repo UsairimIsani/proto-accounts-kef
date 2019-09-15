@@ -37,14 +37,6 @@ class AddProjectLogs extends React.Component {
 
   // ============================= //
 
-  handlePayments = e => {
-    this.setState({
-      ...this.state,
-      payments: e,
-    });
-  };
-  // ============================= //
-
   selectProjectList = () => {
     const { projects } = this.props;
     return projects.length ? (
@@ -63,6 +55,13 @@ class AddProjectLogs extends React.Component {
   };
 
   // =================== handlers ===================== //
+
+  handlePayments = e => {
+    this.setState({
+      ...this.state,
+      payments: e,
+    });
+  };
 
   handleItemChange = (e, index) => {
     const updatedItem = this.state.item;

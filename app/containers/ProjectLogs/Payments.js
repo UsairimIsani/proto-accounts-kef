@@ -82,11 +82,11 @@ class Payments extends Component {
 
   handleDelete = username => {
     // find the user that is deleted
-    let deletedPayer = this.state.payments.find(
+    const deletedPayer = this.state.payments.find(
       payer => payer.username === username,
     );
     // restore deleted user details to user array
-    let restoreUser = this.protoGangCopy.find(
+    const restoreUser = this.protoGangCopy.find(
       db => deletedPayer.username === db.username,
     );
 
@@ -96,11 +96,15 @@ class Payments extends Component {
       ),
       protoGang: [...this.state.protoGang, restoreUser],
     });
+    // setState() takes some time to update state... then callback passes the updated state to parent
+    setTimeout(() => {
+      this.props.handlePayments(this.state.payments);
+    }, 100);
   };
 
   handleSelect = e => {
     const { protoGang, payments } = this.state;
-    let newPayer = protoGang.find(db => {
+    const newPayer = protoGang.find(db => {
       return db.username === e;
     });
     newPayer.amount = 0;
@@ -111,7 +115,6 @@ class Payments extends Component {
         return db.username !== e;
       }),
     });
-    this.props.handlePayments(this.state.payments);
   };
 
   handleIndividualPayment = e => {
@@ -125,7 +128,10 @@ class Payments extends Component {
     this.setState({
       payments: updatePayments,
     });
-    this.props.handlePayments(this.state.payments);
+    // setState() takes some time to update state... then callback passes the updated state to parent
+    setTimeout(() => {
+      this.props.handlePayments(this.state.payments);
+    }, 100);
   };
 
   // ================================================== //

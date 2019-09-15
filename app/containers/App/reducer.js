@@ -29,6 +29,11 @@ export const initialState = {
       id: 3,
       logs: [],
     },
+    {
+      title: 'fourth',
+      id: 4,
+      logs: [],
+    },
   ],
 
   // data from sign up should also be available here, to be used in ProjectLogs

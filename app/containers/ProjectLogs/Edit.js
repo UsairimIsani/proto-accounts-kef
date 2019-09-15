@@ -104,7 +104,7 @@ class EditLog extends Component {
   showEditForm = () => {
     return (
       <Form onSubmit={this.handleSubmit}>
-        <label htmlFor="">Project</label>
+        <label>Project</label>
         <Input
           type="text"
           name="projectTitle"
@@ -162,9 +162,17 @@ class EditLog extends Component {
     );
   };
 
+  // ============================ //
+
   render() {
     const editComponent = !this.state.enableEdit ? (
-      <Button type="primary" ghost onClick={this.handleEdit}>
+      <Button
+        style={{ padding: '0 25%' }}
+        type="primary"
+        size="small"
+        ghost
+        onClick={this.handleEdit}
+      >
         Edit
       </Button>
     ) : (

@@ -10,12 +10,9 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import { Switch, Route } from 'react-router-dom';
 
-
-import AddProjectLogs from 'containers/ProjectLogs/AddProjectLogs';
-import AllLogs from 'containers/ProjectLogs/AllLogs';
+import AddProjectLogs from 'containers/ProjectLogs/Add';
+import AllLogs from 'containers/ProjectLogs/All';
 import CreateProject from 'containers/Create/Modal';
-// import FeaturePage from 'containers/FeaturePage/Loadable';
-// import NotFoundPage from 'containers/NotFoundPage/Loadable';
 import Header from 'components/Header';
 import Footer from 'components/Footer';
 import SignInPage from 'containers/SignIn/signin';
@@ -33,11 +30,10 @@ const App = () => (
     <Header />
     <Switch>
       <Route path="/create-project" component={CreateProject} />
-      <Route path="/project/logs/add" component={AddProjectLogs} />
-      <Route path="/project/logs/all" component={AllLogs} />
+      <Route exact path="/project/logs/add" component={AddProjectLogs} />
+      <Route exact path="/project/logs/all" component={AllLogs} />
       <Route exact path="/signin" component={SignInPage} />
       <Route path="/signup" component={SignUp} />
-      {/* <Route path="" component={NotFoundPage} /> */}
     </Switch>
     <br></br>
     <br></br>
