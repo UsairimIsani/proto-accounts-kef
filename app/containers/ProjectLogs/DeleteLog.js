@@ -14,80 +14,48 @@
 /* eslint-disable react/prefer-stateless-function */
 
 import React, { Component } from 'react';
-import { Button, AutoComplete } from 'antd';
+import { Button } from 'antd';
+import { connect } from 'react-redux';
 
 class DeleteLog extends Component {
-  state = {
-  };
-  handleDelete = log => {
-    alert(log);
+  handleDelete = () => {
+    this.props.deleteLog(this.props.log.id, this.props.projectTitle);
   };
 
-  deleteLogButton = log => {
-    return (
-      <Button
-        type="danger"
-        ghost
-        size="small"
-        shape="round"
-        onClick={() => {
-          this.handleDelete(log);
-        }}
-      >
-        Delete
-      </Button>
-    );
-  };
-
-  //   ============================== //
-
-  //   handleChange = e => {
-  //     this.setState({
-  //       payment: [...this.state.payment, e],
-  //     });
-  //     e = '';
-  //   };
-
-  //   Complete = dataSource => {
-  //     return (
-  //       //      <select name="" id="">
-  //       <AutoComplete
-  //         onSelect={this.handleChange}
-  //         style={{ width: 200 }}
-  //         dataSource={dataSource}
-  //         placeholder="try to type `b`"
-  //         defaultValue="Anees"
-  //         filterOption={(inputValue, option) => {
-  //           return (
-  //             option.props.children
-  //               .toUpperCase()
-  //               .indexOf(inputValue.toUpperCase()) !== -1
-  //           );
-  //         }}
-  //       />
-  //       //    </select>
-  //     );
-  //   };
-
-  //   mapPayments = () => {
-  //     return this.state.payment.length
-  //       ? this.state.payment.map(pay => {
-  //           return <div key={Math.random()}>{pay}</div>;
-  //         })
-  //       : null;
-  //   };
-
-  //  =========================== //
   render() {
-    // const ;
     return (
       <div>
-        {/* {this.Complete(this.state.dataSource)} */}
-        {/* {this.mapPayments()} */}
-        {this.deleteLogButton('Itni Jaldi bhi kia he delete krne ki??')}
+        <Button
+          type="danger"
+          ghost
+          onClick={() => {
+            this.handleDelete();
+          }}
+        >
+          Delete
+        </Button>
       </div>
     );
   }
 }
 
-export default DeleteLog;
+// =============== Redux =============== //
+
+const mapDispatchToProps = dispatch => {
+  return {
+    deleteLog: (id, projTitle) => {
+      dispatch({
+        type: 'DELETE_LOG',
+        id,
+        projTitle,
+      });
+    },
+  };
+};
+
+// ========================== //
+
+export default connect(
+  null,
+  mapDispatchToProps,
+)(DeleteLog);
