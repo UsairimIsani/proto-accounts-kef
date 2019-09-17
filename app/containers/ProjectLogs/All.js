@@ -22,17 +22,19 @@ import { connect } from 'react-redux';
 
 import { Link } from 'react-router-dom';
 
-import { Select } from 'antd';
+import { Select, Modal } from 'antd';
 import './style.scss';
 
 import DeleteLog from './Delete';
 import EditLog from './Edit';
 import IndividualLog from './IndividualLog';
+import PrevLogs from './PrevLogs';
 
 class AllLogs extends Component {
   state = {
     projectTitle: '',
     showLogDetails: false,
+    showDeletedLogs: false,
   };
 
   //   ============= Filter button ============= //
@@ -52,8 +54,14 @@ class AllLogs extends Component {
       );
     });
   };
-  
+
   // ======================================= //
+
+  changeLogDeleteVisibility = () => {
+    this.setState({
+      showDeletedLogs: !this.state.showDeletedLogs,
+    });
+  };
 
   changeLogDetailsVisibility = () => {
     this.setState({
@@ -72,12 +80,17 @@ class AllLogs extends Component {
             <ul className="log-list">
               <li className="log-list-item">
                 {/* ============ Show details of Log ============ */}
-                <IndividualLog
-                  visibility={this.state.showLogDetails}
-                  log={log}
-                  projectTitle={project.title}
-                  close={this.changeLogDetailsVisibility}
-                />
+                <Modal
+                  visible={this.state.showLogDetails}
+                  onCancel={this.changeLogDetailsVisibility}
+                  onOk={this.changeLogDetailsVisibility}
+                >
+                  <IndividualLog
+                    editable
+                    log={log}
+                    projectTitle={project.title}
+                  />
+                </Modal>
                 {/* ====================== */}
                 <a
                   style={{ width: '35%' }}
@@ -112,6 +125,7 @@ class AllLogs extends Component {
                   </div>
                 </div>
               </li>
+              <PrevLogs projectTitle={project.title} prevLogs={log.prevLogs} />
             </ul>
           </div>
         );
@@ -121,10 +135,43 @@ class AllLogs extends Component {
     }
   };
 
+  showDeletedLogs = project => {
+    const newMaps = project.deletedLogs.map((log, index) => {
+      return (
+        <div key={index}>
+          <IndividualLog
+            editable={false}
+            log={log}
+            projectTitle={project.title}
+          />
+          <hr />
+          <hr />
+          <hr />
+        </div>
+      );
+    });
+    return newMaps;
+  };
+
   handleLogs = project => {
     return (
       <div key={project.id} className="projectLogs">
         <h1 className="projectTitle">{project.title.toUpperCase()}</h1>
+
+        {project.deletedLogs.length ? (
+          <div>
+            <a onClick={this.changeLogDeleteVisibility}> See Deleted</a>
+            <Modal
+              visible={this.state.showDeletedLogs}
+              onCancel={this.changeLogDeleteVisibility}
+              onOk={this.changeLogDeleteVisibility}
+            >
+              <h2>Deleted Logs</h2>
+              {this.showDeletedLogs(project)}
+            </Modal>
+          </div>
+        ) : null}
+
         <strong
           style={{
             fontSize: '100%',
@@ -138,7 +185,6 @@ class AllLogs extends Component {
           <div style={{ width: '25%' }}> Price</div>
           <div style={{ width: '35%' }}>Last Modified</div>
         </strong>
-
         {this.handleEachLog(project)}
       </div>
     );
@@ -206,15 +252,4 @@ const mapStateToProps = state => {
   };
 };
 
-const areStatesEqual = (prevState, newState) => {
-  const result =
-    prevState.global.projects[0].logs === newState.global.projects[0].logs;
-  return result;
-};
-
-export default connect(
-  mapStateToProps,
-  null,
-  null,
-  { areStatesEqual },
-)(AllLogs);
+export default connect(mapStateToProps)(AllLogs);

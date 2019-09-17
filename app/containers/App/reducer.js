@@ -17,22 +17,26 @@ export const initialState = {
       title: 'first',
       id: 1,
       logs: [],
+      deletedLogs: [],
     },
     {
       title: 'second',
       id: 2,
       logs: [],
+      deletedLogs: [],
     },
 
     {
       title: 'third',
       id: 3,
       logs: [],
+      deletedLogs: [],
     },
     {
       title: 'fourth',
       id: 4,
       logs: [],
+      deletedLogs: [],
     },
   ],
 
@@ -81,9 +85,7 @@ function appReducer(state = initialState, action) {
       const { item, price, shop, payments } = action;
       // making a copy of projectLogs without mutating state
       const projectLists = state.projects.map(project => {
-        let projectLogs = project.logs.filter(project => {
-          return true;
-        });
+        let projectLogs = project.logs.filter(() => true);
 
         const newLog = {
           item,
@@ -93,11 +95,10 @@ function appReducer(state = initialState, action) {
           username: 'static username',
           date: new Date(),
           id: Math.random(),
+          prevLogs: [],
         };
         if (action.projectTitle === project.title) {
-          projectLogs = project.logs.filter(log => {
-            return true;
-          });
+          projectLogs = project.logs.filter(() => true);
           projectLogs.push(newLog);
         }
         return Object.assign({}, project, {
@@ -111,18 +112,24 @@ function appReducer(state = initialState, action) {
 
     // ========== Delete logs ============ //
     case 'DELETE_LOG':
-      const updatedProject = state.projects.map(project => {
+      // find deleted log
+      // let deletedLog;
+      const projectsCopy = state.projects.filter(() => true);
+
+      const updatedProject = projectsCopy.map(project => {
         // making a copy of projectLogs without mutating state
-        let newLog = project.logs.filter(project => {
-          return true;
-        });
+        let newLog = project.logs.filter(() => true);
 
         if (action.projTitle === project.title) {
-          newLog = project.logs.filter(log => {
-            console.log(log.id !== action.id);
-            return log.id !== action.id;
-          });
+          // add deleted logs to deleted Log array
+          project.deletedLogs = [
+            ...project.deletedLogs,
+            project.logs.find(log => log.id === action.id),
+          ];
+          // remove deledted log from logs array
+          newLog = project.logs.filter(log => log.id !== action.id);
         }
+
         return Object.assign({}, project, {
           logs: newLog,
         });
@@ -133,12 +140,20 @@ function appReducer(state = initialState, action) {
     case 'EDIT_LOG':
       const editedProject = state.projects.map(project => {
         // making a copy of projectLogs without mutating state
-        let newLog = project.logs.filter(project => {
+        let newLog = project.logs.filter(() => {
           return true;
         });
 
         if (action.projectTitle === project.title) {
-          newLog = project.logs.filter(log => log.id !== action.log.id);
+          let prevLogArray = [...action.prevLog.prevLogs];
+          // clearing nested prevLogs array
+          action.prevLog.prevLogs = [];
+          prevLogArray = [...prevLogArray, action.prevLog];
+
+          newLog = project.logs.filter(log => {
+            // prevLogs.push(log.prevLog);
+            return log.id !== action.log.id;
+          });
           const { item, price, shop, payments, id } = action.log;
           const editedLog = {
             item,
@@ -148,10 +163,14 @@ function appReducer(state = initialState, action) {
             date: new Date(),
             id,
             username: 'static username',
+            prevLogs: prevLogArray,
+            modifiedBy: 'user logged in',
           };
           newLog.push(editedLog);
+
           // let sortedLog = newLog.sort((a, b) => a.date - b.log);
         }
+        // console.log(newLog);
         return Object.assign({}, project, {
           logs: newLog,
         });

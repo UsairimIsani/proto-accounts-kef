@@ -19,7 +19,11 @@ import { connect } from 'react-redux';
 
 class DeleteLog extends Component {
   handleDelete = () => {
-    this.props.deleteLog(this.props.log.id, this.props.projectTitle);
+    this.props.deleteLog(
+      this.props.log.id,
+      this.props.projectTitle,
+      this.props.log,
+    );
   };
 
   render() {
@@ -44,11 +48,12 @@ class DeleteLog extends Component {
 
 const mapDispatchToProps = dispatch => {
   return {
-    deleteLog: (id, projTitle) => {
+    deleteLog: (id, projTitle, log) => {
       dispatch({
         type: 'DELETE_LOG',
         id,
         projTitle,
+        log,
       });
     },
   };

@@ -17,20 +17,16 @@
 import React, { Component } from 'react';
 
 import './style.scss';
-import { Modal } from 'antd';
 
 import DeleteLog from './Delete';
 import EditLog from './Edit';
+import PrevLogs from './PrevLogs';
 
-class individualLog extends Component {
+class IndividualLog extends Component {
   showLogDetails = log => {
     const { projectTitle } = this.props;
     return (
-      <Modal
-        visible={this.props.visibility}
-        onCancel={this.props.close}
-        onOk={this.props.close}
-      >
+      <div>
         <div className="log-details">
           <div> Items:</div>
           <span>
@@ -76,18 +72,36 @@ class individualLog extends Component {
           <div>Logged by:</div>
           <span>{log.username}</span>
         </div>
+
+        {log.modifiedBy ? (
+          <div className="log-details">
+            <div>Modified by:</div>
+            <span>{log.modifiedBy}</span>
+          </div>
+        ) : null}
+
         <hr />
+        <div className="log-details">
+          <div>See History..</div>
+          <span>
+            <PrevLogs projectTitle={projectTitle} prevLogs={log.prevLogs} />
+          </span>
+        </div>
+        <hr />
+
         {/* props passed in order to delete them */}
 
-        <div style={{ display: 'flex' }}>
-          <div style={{ width: '50%' }}>
-            <DeleteLog log={log} projectTitle={projectTitle} />
+        {this.props.editable ? (
+          <div style={{ display: 'flex' }}>
+            <div style={{ width: '50%' }}>
+              <DeleteLog log={log} projectTitle={projectTitle} />
+            </div>
+            <div style={{ width: '50%' }}>
+              <EditLog log={log} projectTitle={projectTitle} />
+            </div>
           </div>
-          <div style={{ width: '50%' }}>
-            <EditLog log={log} projectTitle={projectTitle} />
-          </div>
-        </div>
-      </Modal>
+        ) : null}
+      </div>
     );
   };
 
@@ -98,4 +112,4 @@ class individualLog extends Component {
 
 // ===================== //
 
-export default individualLog;
+export default IndividualLog;
