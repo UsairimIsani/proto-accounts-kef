@@ -66,7 +66,7 @@ class EditLog extends Component {
       this.comparePrice(parseInt(this.state.price), payments)
     ) {
       const log = { item, price, shop, payments, id: this.props.log.id };
-      this.props.editLog(this.props.projectTitle, log);
+      this.props.editLog(this.props.projectTitle, log, this.props.log);
 
       // clear inputs
       this.setState(this.baseState);
@@ -102,9 +102,10 @@ class EditLog extends Component {
   // ==================================== //
 
   showEditForm = () => {
+    const { item, price, shop } = this.props.log;
     return (
       <Form onSubmit={this.handleSubmit}>
-        <label htmlFor="">Project</label>
+        <label>Project</label>
         <Input
           type="text"
           name="projectTitle"
@@ -112,15 +113,15 @@ class EditLog extends Component {
           disabled
         />
         <label> Item name</label>
-        {this.state.item.map((item, index) => {
+        {item.map((itm, index) => {
           return (
             <Input
               key={index}
               type="text"
               name="item"
-              value={this.state.item[index]}
+              defaultValue={itm}
               onChange={e => {
-                const editedItem = this.state.item.filter(item => {
+                const editedItem = this.state.item.filter(() => {
                   return true;
                 });
                 editedItem[index] = e.target.value;
@@ -137,7 +138,7 @@ class EditLog extends Component {
           type="number"
           min="0"
           name="price"
-          value={this.state.price}
+          defaultValue={price}
           onChange={this.handleChange}
           required
         />
@@ -162,9 +163,17 @@ class EditLog extends Component {
     );
   };
 
+  // ============================ //
+
   render() {
     const editComponent = !this.state.enableEdit ? (
-      <Button type="primary" ghost onClick={this.handleEdit}>
+      <Button
+        style={{ padding: '0 25%' }}
+        type="primary"
+        size="small"
+        ghost
+        onClick={this.handleEdit}
+      >
         Edit
       </Button>
     ) : (
@@ -191,11 +200,12 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    editLog: (projectTitle, log) => {
+    editLog: (projectTitle, log, prevLog) => {
       dispatch({
         type: 'EDIT_LOG',
         log,
         projectTitle,
+        prevLog,
       });
     },
   };
