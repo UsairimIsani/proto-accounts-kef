@@ -5,7 +5,9 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Input, Icon, Button, notification } from 'antd';
+import {
+  Input, Icon, Button, notification
+} from 'antd';
 
 class SignInPage extends Component {
   state = {
