@@ -7,7 +7,6 @@
  */
 
 import React, { Component } from 'react';
-import { Helmet } from 'react-helmet';
 import AddProjectLogs from 'containers/ProjectLogs/Add';
 import AllLogs from 'containers/ProjectLogs/All';
 import CreateProject from 'containers/Create/Modal';
@@ -18,12 +17,13 @@ import SignUp from 'containers/Signup/signup';
 import { Route, Switch } from 'react-router-dom';
 import './style.scss';
 
-
 // eslint-disable-next-line react/prefer-stateless-function
 class App extends Component {
   constructor(props) {
     super(props);
-    if (localStorage.getItem('users') === undefined) { localStorage.setItem('users', JSON.stringify([])); }
+    if (localStorage.getItem('users') === undefined) {
+      localStorage.setItem('users', JSON.stringify([]));
+    }
   }
 
   render() {
@@ -36,7 +36,7 @@ class App extends Component {
           <Route path="/project/logs/all" component={AllLogs} />
           <Route exact path="/signin" component={SignInPage} />
           <Route path="/signup" component={SignUp} />
-          {/* <Route path="" component={NotFoundPage} /> */}
+          
         </Switch>
         <br></br>
         <br></br>
@@ -48,6 +48,5 @@ class App extends Component {
     );
   }
 }
-
 
 export default App;
