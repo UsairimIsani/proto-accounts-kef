@@ -7,8 +7,9 @@
  */
 
 import React, { Component } from 'react';
-import AddProjectLogs from 'containers/ProjectLogs/AddProjectLogs';
-import AllLogs from 'containers/ProjectLogs/AllLogs';
+import { Helmet } from 'react-helmet';
+import AddProjectLogs from 'containers/ProjectLogs/Add';
+import AllLogs from 'containers/ProjectLogs/All';
 import CreateProject from 'containers/Create/Modal';
 import Header from 'components/Header';
 import Footer from 'components/Footer';
@@ -16,6 +17,7 @@ import SignInPage from 'containers/SignIn/signin';
 import SignUp from 'containers/Signup/signup';
 import { Route, Switch } from 'react-router-dom';
 import './style.scss';
+
 
 // eslint-disable-next-line react/prefer-stateless-function
 class App extends Component {
@@ -46,5 +48,6 @@ class App extends Component {
     );
   }
 }
+
 
 export default App;

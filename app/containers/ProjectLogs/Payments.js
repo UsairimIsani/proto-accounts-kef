@@ -11,17 +11,27 @@
 /* eslint-disable react/prefer-stateless-function */
 
 import React, { Component } from 'react';
-import { Select, Input } from 'antd';
+import { Select, Input, Button } from 'antd';
 
 class Payments extends Component {
-  state = {
-    payments: [],
-    protoGang: [
-      { name: 'Anees Hashmi', username: 'aneeshashmi' },
-      { name: 'Shehryar Wasim', username: 'MSW' },
-      { name: 'Ubadah Tanveer', username: 'sotu' },
-    ],
+  constructor(props) {
+    super(props);
+    this.state = {
+      payments: [],
+      protoGang: this.props.users,
+    };
+    this.protoGangCopy = this.props.users;
+    this.baseState = this.state;
+  }
+  // ========================= //
+
+  // this function is invoked in parent component using ref
+  clearInputs = () => {
+    // reseting stata after form submition
+    this.setState(this.baseState);
   };
+
+  // =============================================== //
 
   mapDatasource = () => {
     const { protoGang } = this.state;
@@ -36,23 +46,78 @@ class Payments extends Component {
       : null;
   };
 
-  selectHandler = e => {
-    const { protoGang, payments } = this.state;
+  mapPayment = () => {
+    const { payments } = this.state;
+    return payments.length
+      ? payments.map(payer => {
+          return (
+            <div key={payer.username}>
+              <span> {payer.name}</span>
+              <div>
+                <Input
+                  style={{ width: '90%' }}
+                  required
+                  value={payer.amount}
+                  type="number"
+                  name={payer.username}
+                  onChange={this.handleIndividualPayment}
+                />
+                <Button
+                  style={{ width: '10%' }}
+                  type="danger"
+                  onClick={() => {
+                    this.handleDelete(payer.username);
+                  }}
+                >
+                  x
+                </Button>
+              </div>
+            </div>
+          );
+        })
+      : null;
+  };
+
+  // ============= Data handlers ================== //
+
+  handleDelete = username => {
+    // find the user that is deleted
+    const deletedPayer = this.state.payments.find(
+      payer => payer.username === username,
+    );
+    // restore deleted user details to user array
+    const restoreUser = this.protoGangCopy.find(
+      db => deletedPayer.username === db.username,
+    );
+
     this.setState({
-      payments: [
-        ...payments,
-        protoGang.find(db => {
-          return db.username === e;
-        }),
-      ],
+      payments: this.state.payments.filter(
+        payer => payer.username !== username,
+      ),
+      protoGang: [...this.state.protoGang, restoreUser],
+    });
+    // setState() takes some time to update state... then callback passes the updated state to parent
+    setTimeout(() => {
+      this.props.handlePayments(this.state.payments);
+    }, 100);
+  };
+
+  handleSelect = e => {
+    const { protoGang, payments } = this.state;
+    const newPayer = protoGang.find(db => {
+      return db.username === e;
+    });
+    newPayer.amount = 0;
+
+    this.setState({
+      payments: [...payments, newPayer],
       protoGang: protoGang.filter(db => {
         return db.username !== e;
       }),
     });
-    // console.log(this.state.payments);
   };
 
-  individualPaymentHandle = e => {
+  handleIndividualPayment = e => {
     const { payments } = this.state;
     const payer = payments.find(p => {
       return e.target.name === p.username;
@@ -63,36 +128,24 @@ class Payments extends Component {
     this.setState({
       payments: updatePayments,
     });
-    this.props.handlePayments(this.state.payments);
+    // setState() takes some time to update state... then callback passes the updated state to parent
+    setTimeout(() => {
+      this.props.handlePayments(this.state.payments);
+    }, 100);
   };
 
-  mapPayment = () => {
-    const { payments } = this.state;
-    return payments.length
-      ? payments.map(payer => {
-          return (
-            <div key={payer.username}>
-              {payer.name}
-              <Input
-                value={payer.amount}
-                type="number"
-                name={payer.username}
-                onChange={this.individualPaymentHandle}
-              />
-            </div>
-          );
-        })
-      : null;
-  };
+  // ================================================== //
 
   render() {
     return (
       <div>
-        <Select onSelect={this.selectHandler}>{this.mapDatasource()}</Select>
+        <Select onSelect={this.handleSelect}>{this.mapDatasource()}</Select>
         {this.mapPayment()}
       </div>
     );
   }
 }
+
+// ================================= //
 
 export default Payments;
