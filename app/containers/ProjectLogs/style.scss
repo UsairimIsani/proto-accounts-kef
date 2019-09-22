@@ -1,19 +1,86 @@
-.main {
+.projectLogs {
+  border-bottom: 2px black solid;
+  color: black;
+}
+
+.log {
   text-align: center;
   padding: 5%;
   strong {
     font-size: 200%;
   }
 }
+
+.log-box {
+  width: 100%;
+  padding: 2%;
+}
+
+.log-list {
+  padding: 0;
+}
+
+.log-list-item {
+  text-align: left;
+  display: flex;
+}
+
+.side-bar {
+  background: grey;
+  height: 100vh;
+  float: right;
+  width: 30%;
+  h1 {
+    width: 100%;
+    padding: 4% 10px;
+    padding-top: 30%;
+    color: white;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
+      'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  }
+  h2 {
+    text-align: center;
+    border-radius: 20%;
+    a {
+      color: white;
+      &:hover {
+        color: brown;
+      }
+    }
+  }
+}
+
+.selectTag {
+  width: 100%;
+  padding: 10% 0;
+  border: 0.5px solid grey;
+  border-radius: 10px;
+}
+
+// ====================================== //
+
+.projectTitle {
+  width: 100%;
+  color: brown;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
 .top-right {
   text-align: right;
 }
 
 .border {
-  border-bottom: 0.2px black solid;
-  padding: 5%;
+  border-bottom: 0.1px black solid;
 }
 
-.logs-box {
-  width: 60%;
+a {
+  color: black;
+}
+
+// =========================== //
+
+@media (max-width: 500px) {
+  .side-bar {
+    display: none;
+  }
 }

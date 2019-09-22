@@ -2,13 +2,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './style.scss';
-import { DatePicker } from 'antd';
 
 class Header extends React.Component {
-  // eslint-disable-line react/prefer-stateless-function
   render() {
     return (
-      <div className="header" style={{ background: '#fff000' }}>
+      <div className="header">
         <div className="nav-bar">
           <h1>PROTO ACCONTS</h1>
           <Link className="router-link" to="/create-project">
