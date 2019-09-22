@@ -1,16 +1,10 @@
+/* eslint-disable no-fallthrough */
 /* eslint-disable indent */
 /* eslint-disable arrow-parens */
 /* eslint-disable no-case-declarations */
-import { LOAD_REPOS_SUCCESS, LOAD_REPOS, LOAD_REPOS_ERROR } from './constants';
 
 // The initial state of the App
 export const initialState = {
-  loading: false,
-  error: false,
-  currentUser: false,
-  userData: {
-    repositories: false,
-  },
   projects: [
     // dummy data: ubadah has to add data here
     {
@@ -40,45 +34,43 @@ export const initialState = {
     },
   ],
 
-  // data from sign up should also be available here, to be used in ProjectLogs
-  // MSW has to add data here
-  // dummy data
-  users: [
-    { name: 'Anees Hashmi', username: 'aneeshashmi' },
-    { name: 'Shehryar Wasim', username: 'MSW' },
-    { name: 'Ubadah Tanveer', username: 'sotu' },
-  ],
+  users: [],
+  // currentUser: '',
 };
 
 function appReducer(state = initialState, action) {
   switch (action.type) {
-    case LOAD_REPOS: {
-      const newState = {
+    case 'SIGN_UP':
+      const updatedUsersArray = state.users.filter(() => true);
+      updatedUsersArray.push(action.user);
+      return {
         ...state,
-        loading: true,
-        error: false,
-        userData: {
-          repositories: false,
-        },
+        users: updatedUsersArray,
       };
 
-      return newState;
-    }
-    case LOAD_REPOS_SUCCESS: {
-      const newState = {
-        ...state,
-        loading: false,
-        userData: {
-          repositories: action.repos,
-        },
-        currentUser: action.username,
-      };
-      return newState;
-    }
+    case 'LOG_IN':
+      const { email, password } = action.user;
+      const userFound = state.users.find(usr => {
+        const userEmail =
+          email.indexOf('@') === -1 ? usr.username : usr.emailId;
+        return userEmail === email;
+      });
+      if (userFound && userFound.password === password) {
 
-    case LOAD_REPOS_ERROR: {
-      return { ...state, error: action.error, loading: false };
-    }
+        return {
+          ...state,
+          currentUser: userFound.firstName + ' ' + userFound.lastName,
+        };
+      } else {
+        alert('user not found');
+      }
+
+    case 'LOG_OUT':
+      // removing the currentuser or logout
+      return {
+        ...state,
+        currentUser: '',
+      };
 
     // ============== ProjectLogs ============= //
     case 'ADD_PROJECT_LOG':
@@ -92,7 +84,7 @@ function appReducer(state = initialState, action) {
           price,
           shop,
           payments,
-          username: 'static username',
+          username: state.currentUser,
           date: new Date(),
           id: Math.random(),
           prevLogs: [],

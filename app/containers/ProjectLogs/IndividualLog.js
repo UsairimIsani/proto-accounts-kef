@@ -82,7 +82,7 @@ class IndividualLog extends Component {
 
         <hr />
         <div className="log-details">
-          <div>See History..</div>
+          <div>See updates</div>
           <span>
             <PrevLogs projectTitle={projectTitle} prevLogs={log.prevLogs} />
           </span>

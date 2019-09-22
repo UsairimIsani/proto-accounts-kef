@@ -39,7 +39,7 @@ class Payments extends Component {
       ? protoGang.map(proto => {
           return (
             <Select.Option key={proto.username} value={proto.username}>
-              {proto.name}
+              {proto.firstName + ' ' + proto.lastName}
             </Select.Option>
           );
         })
@@ -52,7 +52,7 @@ class Payments extends Component {
       ? payments.map(payer => {
           return (
             <div key={payer.username}>
-              <span> {payer.name}</span>
+              <span> {payer.firstName}</span>
               <div>
                 <Input
                   style={{ width: '90%' }}
