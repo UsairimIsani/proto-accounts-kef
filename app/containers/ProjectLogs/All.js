@@ -20,6 +20,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import { Descriptions } from 'antd';
+
 import { Link } from 'react-router-dom';
 
 import { Select, Modal } from 'antd';
@@ -171,7 +173,13 @@ class AllLogs extends Component {
             </Modal>
           </div>
         ) : null}
-
+          <Descriptions title="Project Description" layout={'horizontal'} bordered
+            size={'small'}>
+          <Descriptions.Item label="Contributors:" span ={6}></Descriptions.Item>
+          <Descriptions.Item label="Start Date:" span={4}></Descriptions.Item>
+          <Descriptions.Item label="End Date:" span={4}></Descriptions.Item>
+          <Descriptions.Item label="Expected Cost:" span={4}></Descriptions.Item>
+        </Descriptions>,
         <strong
           style={{
             fontSize: '100%',
