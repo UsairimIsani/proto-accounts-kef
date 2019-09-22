@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 /* eslint-disable no-fallthrough */
 /* eslint-disable indent */
 /* eslint-disable arrow-parens */
@@ -5,35 +6,7 @@
 
 // The initial state of the App
 export const initialState = {
-  projects: [
-    // dummy data: ubadah has to add data here
-    {
-      title: 'first',
-      id: 1,
-      logs: [],
-      deletedLogs: [],
-    },
-    {
-      title: 'second',
-      id: 2,
-      logs: [],
-      deletedLogs: [],
-    },
-
-    {
-      title: 'third',
-      id: 3,
-      logs: [],
-      deletedLogs: [],
-    },
-    {
-      title: 'fourth',
-      id: 4,
-      logs: [],
-      deletedLogs: [],
-    },
-  ],
-
+  projects: [],
   users: [],
   // currentUser: '',
 };
@@ -56,20 +29,38 @@ function appReducer(state = initialState, action) {
         return userEmail === email;
       });
       if (userFound && userFound.password === password) {
-
         return {
           ...state,
           currentUser: userFound.firstName + ' ' + userFound.lastName,
         };
-      } else {
-        alert('user not found');
       }
+      alert('user not found');
 
     case 'LOG_OUT':
       // removing the currentuser or logout
       return {
         ...state,
         currentUser: '',
+      };
+
+    // ============================== //
+
+    case 'PROJECT_INFO':
+      const { inputValue, tags, dateValue, costSlider, costValue } = action;
+      const projectDetail = {
+        title: inputValue,
+        tag: tags,
+        startDate: dateValue.toString[0],
+        endDate: dateValue.toString[1],
+        cost: costSlider,
+        costUnit: costValue,
+        logs: [],
+        deletedLogs: [],
+      };
+      const newProjects = state.projects.concat([projectDetail]);
+      return {
+        ...state,
+        projects: newProjects,
       };
 
     // ============== ProjectLogs ============= //
@@ -105,7 +96,6 @@ function appReducer(state = initialState, action) {
     // ========== Delete logs ============ //
     case 'DELETE_LOG':
       // find deleted log
-      // let deletedLog;
       const projectsCopy = state.projects.filter(() => true);
 
       const updatedProject = projectsCopy.map(project => {
@@ -154,15 +144,12 @@ function appReducer(state = initialState, action) {
             payments,
             date: new Date(),
             id,
-            username: 'static username',
+            username: state.currentUser,
             prevLogs: prevLogArray,
-            modifiedBy: 'user logged in',
+            modifiedBy: state.currentUser,
           };
           newLog.push(editedLog);
-
-          // let sortedLog = newLog.sort((a, b) => a.date - b.log);
         }
-        // console.log(newLog);
         return Object.assign({}, project, {
           logs: newLog,
         });
