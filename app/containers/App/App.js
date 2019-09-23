@@ -30,32 +30,46 @@ class App extends Component {
     }
   };
 
+  componentDidUpdate = () => {
+    const { currentUser } = this.props;
+    if (currentUser) {
+      if (location.pathname === '/signin') {
+        this.props.history.push('/create-project');
+      }
+    }
+  };
+
   render() {
     // redirection to new page when logged in
-    if (location.pathname == '/signin' && this.props.currentUser) {
-      this.props.history.push('/create-project');
-    }
-
-    const { users, currentUser } = this.props;
+    const { currentUser, projects } = this.props;
 
     return (
       <div className="app-wrapper">
         <Header />
-        <Switch>
-          {currentUser ? (
-            <div>
-              <Route path="/create-project" component={CreateProject} />
-              <Route path="/project/logs/add" component={AddProjectLogs} />
-              <Route path="/project/logs/all" component={AllLogs} />
-            </div>
-          ) : (
-            <div>
-              <Route exact path="/signin" component={SignInPage} />
-              <Route path="/signup" component={SignUp} />
-            </div>
-          )}
-        </Switch>
-        <br></br>
+        <div className="compo">
+          <Switch>
+            {currentUser ? (
+              <div>
+                <Route path="/create-project" component={CreateProject} />
+                {/* project logs will be accessable only if a project is added */}
+                {projects.length ? (
+                  <div>
+                    <Route
+                      path="/project/logs/add"
+                      component={AddProjectLogs}
+                    />
+                    <Route path="/project/logs/all" component={AllLogs} />
+                  </div>
+                ) : null}
+              </div>
+            ) : (
+              <div>
+                <Route exact path="/signin" component={SignInPage} />
+                <Route path="/signup" component={SignUp} />
+              </div>
+            )}
+          </Switch>
+        </div>
         <br></br>
         <br></br>
         <br></br>
@@ -71,6 +85,7 @@ class App extends Component {
 const mapStateToProps = state => ({
   users: state.global.users,
   currentUser: state.global.currentUser,
+  projects: state.global.projects,
 });
 
 // ========================== //

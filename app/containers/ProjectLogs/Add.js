@@ -35,6 +35,11 @@ class AddProjectLogs extends React.Component {
     this.paymentsComponent = React.createRef();
   }
 
+  // componentWillMount = () => {
+  // };
+
+  
+
   // ============================= //
 
   selectProjectList = () => {
@@ -142,7 +147,7 @@ class AddProjectLogs extends React.Component {
   render() {
     const projectList = this.selectProjectList();
     return (
-      <div className="feature-page">
+      <div>
         <Form onSubmit={this.handleSubmit}>
           <label>Project Title</label>
           <Select
@@ -197,7 +202,11 @@ class AddProjectLogs extends React.Component {
           />
           {/* =============== */}
 
-          <Button type="primary" htmlType="submit">
+          <Button
+            type="primary"
+            htmlType="submit"
+            style={{ width: '100%', margin: '10px 0' }}
+          >
             Add Log
           </Button>
         </Form>

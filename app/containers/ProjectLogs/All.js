@@ -37,6 +37,14 @@ class AllLogs extends Component {
     logsVisibility: {},
   };
 
+  componentDidMount = () => {
+    console.log('logg all');
+
+    if (!this.props.projects.length) {
+      this.props.history.push('/create-project');
+    }
+  };
+
   // set initital visibility of each log to false
 
   componentDidMount = () => {

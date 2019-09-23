@@ -1,4 +1,21 @@
 .header {
+  .top {
+    display: flex;
+    background: darkslategrey;
+    padding: 20px 30px;
+    height: 100px;
+
+    h1 {
+      width: 80%;
+      color: white;
+      font-size: 300%;
+      font-weight: 900;
+    }
+    div {
+      padding: 10px 0;
+    }
+  }
+
   .nav-bar {
     text-align: center;
   }
@@ -17,12 +34,12 @@
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-weight: bold;
     font-size: 16px;
-    border: 2px solid #41ADDD;
-    color: #41ADDD;
+    border: 2px solid #41addd;
+    color: #41addd;
 
     &:active {
-      background: #41ADDD;
-      color: #FFF;
+      background: #41addd;
+      color: #fff;
     }
   }
 }
