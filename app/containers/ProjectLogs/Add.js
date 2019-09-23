@@ -20,6 +20,28 @@ import 'antd/dist/antd.css';
 import { Form, Input, Button, Select } from 'antd';
 import Payments from './Payments';
 
+import posed from 'react-pose';
+
+// ============================== //
+
+const Addlogform = posed.div({
+  enter: {
+    staggerChildren: 300,
+  },
+});
+const FormField = posed.div({
+  enter: {
+    opacity: 1,
+    y: 1,
+  },
+  exit: {
+    opacity: 0,
+    y: -1000,
+  },
+});
+
+// ============================== //
+
 class AddProjectLogs extends React.Component {
   constructor(props) {
     super(props);
@@ -29,11 +51,18 @@ class AddProjectLogs extends React.Component {
       price: '100',
       shop: '',
       totalItems: 1,
+      animationdelay: true,
     };
     this.initState = this.state;
     // using ref for clearing the payment inputs in Payments component
     this.paymentsComponent = React.createRef();
+    setTimeout(() => {
+      this.setState({ animationdelay: false });
+    }, 1000);
   }
+
+  // componentWillMount = () => {
+  // };
 
   // ============================= //
 
@@ -142,64 +171,84 @@ class AddProjectLogs extends React.Component {
   render() {
     const projectList = this.selectProjectList();
     return (
-      <div className="feature-page">
+      <div>
         <Form onSubmit={this.handleSubmit}>
-          <label>Project Title</label>
-          <Select
-            value={this.state.projectTitle}
-            placeholder="select a project"
-            onChange={e => {
-              this.setState({
-                projectTitle: e,
-              });
-            }}
-          >
-            {projectList}
-          </Select>
-          <label>Number of Items</label>
-          <Input
-            type="number"
-            required
-            defaultValue="1"
-            min="1"
-            value={this.state.totalItems}
-            onChange={this.handleTotalItems}
-          />
-          {/* Input for item names */}
-          <label>Item Name</label>
-          <div style={{ display: 'flex' }}> {this.handleNumberOfItems()}</div>
-          {/* ================  */}
-
-          <label>Total Price</label>
-          <Input
-            type="number"
-            name="price"
-            value={this.state.price}
-            required
-            onChange={this.handleChange}
-            min={1}
-          />
-          <label>Shop name</label>
-          <Input
-            name="shop"
-            onChange={this.handleChange}
-            value={this.state.shop}
-            allowClear
-            required
-            placeholder="eg: general electronics"
-          />
-          {/* payment component */}
-          <label>Payments</label>
-          <Payments
-            handlePayments={this.handlePayments}
-            ref={this.paymentsComponent}
-            users={this.props.users}
-          />
-          {/* =============== */}
-
-          <Button type="primary" htmlType="submit">
-            Add Log
-          </Button>
+          <Addlogform pose={!this.state.animationdelay ? 'enter' : 'exit'}>
+            <FormField>
+              <label>Project Title</label>
+              <Select
+                value={this.state.projectTitle}
+                placeholder="select a project"
+                onChange={e => {
+                  this.setState({
+                    projectTitle: e,
+                  });
+                }}
+              >
+                {projectList}
+              </Select>
+            </FormField>
+            <FormField>
+              <label>Number of Items</label>
+              <Input
+                type="number"
+                required
+                defaultValue="1"
+                min="1"
+                value={this.state.totalItems}
+                onChange={this.handleTotalItems}
+              />
+            </FormField>
+            <FormField>
+              {/* Input for item names */}
+              <label>Item Name</label>
+              <div style={{ display: 'flex' }}>
+                {this.handleNumberOfItems()}
+              </div>
+              {/* ================  */}
+            </FormField>
+            <FormField>
+              <label>Total Price</label>
+              <Input
+                type="number"
+                name="price"
+                value={this.state.price}
+                required
+                onChange={this.handleChange}
+                min={1}
+              />
+            </FormField>
+            <FormField>
+              <label>Shop name</label>
+              <Input
+                name="shop"
+                onChange={this.handleChange}
+                value={this.state.shop}
+                allowClear
+                required
+                placeholder="eg: general electronics"
+              />
+            </FormField>
+            <FormField>
+              {/* payment component */}
+              <label>Payments</label>
+              <Payments
+                handlePayments={this.handlePayments}
+                ref={this.paymentsComponent}
+                users={this.props.users}
+              />
+            </FormField>
+            {/* =============== */}
+            <FormField>
+              <Button
+                type="primary"
+                htmlType="submit"
+                style={{ width: '100%', margin: '10px 0' }}
+              >
+                Add Log
+              </Button>
+            </FormField>
+          </Addlogform>
         </Form>
       </div>
     );

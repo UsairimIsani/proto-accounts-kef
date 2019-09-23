@@ -56,7 +56,7 @@ class PrevLogs extends Component {
       </Modal>
     ) : (
       <div>
-        <a onClick={this.changeLogVisibility}>show history...</a>
+        <a onClick={this.changeLogVisibility}>See all updates</a>
       </div>
     );
     return <div>{this.props.prevLogs.length ? prevLogs : null}</div>;

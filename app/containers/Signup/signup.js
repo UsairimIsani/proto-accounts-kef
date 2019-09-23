@@ -1,76 +1,88 @@
+/* eslint-disable indent */
+/* eslint-disable no-unused-expressions */
+/* eslint-disable arrow-parens */
+/* eslint-disable react/prop-types */
+/* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
-import {
-  Input, Icon, Button, notification
-} from 'antd';
+import { Form, Input, Icon, Button, notification } from 'antd';
+import { connect } from 'react-redux';
 
 class SignUp extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      Users: [],
       firstName: '',
       lastName: '',
-      emailId: '',
       password: '',
+      emailId: '',
       confirmpassword: '',
     };
+    this.initState = this.state;
   }
 
-  handleSignUp = () => {
+  handleChange = e => {
+    const { name, value } = e.target;
+    this.setState({
+      [name]: value,
+    });
+  };
+
+  handleSignUp = e => {
+    e.preventDefault();
     const {
       firstName,
       lastName,
       emailId,
       password,
       confirmpassword,
-      // eslint-disable-next-line no-unused-vars
-      Users
     } = this.state;
-    // eslint-disable-next-line no-unused-vars
-    const user = {
-      firstName,
-      lastName,
-      emailId,
-      password,
-    };
-    if (password !== confirmpassword) {
-      // eslint-disable-next-line no-alert
-      alert("Passwords don't match");
-    }
-    const localUsers = JSON.parse(localStorage.getItem('users'));
+    const username = emailId.slice(0, emailId.indexOf('@'));
 
-    let userExist = false;
-    if (localUsers.length) {
-      localUsers.forEach((element) => {
-        if (element.emailId === emailId) {
-          userExist = true;
-          setTimeout(() => {
-            notification.open({
-              message: 'USER EXIST',
-              description:
-                'User already exist, proceed to Signin.',
-              style: {
-                width: 600,
-                marginLeft: 335 - 600,
-              },
-            });
-          }, 1000);
-          setTimeout(() => {
-            // eslint-disable-next-line no-restricted-globals
-            location.replace('/signin');
-          }, 2000);
-        }
+    if (password === confirmpassword) {
+      const user = {
+        firstName,
+        lastName,
+        emailId,
+        password,
+        username,
+      };
+
+      // check if user already exists
+      const userExist = this.props.users.find(usr => {
+        return usr.username.toLowerCase() === user.username.toLowerCase();
+      });
+
+      if (!userExist) {
+        this.props.addUser(user);
+        // clear form  inputs
+        this.setState(this.initState);
+        // redirecting to sign in page
+        this.props.history.push('/signin');
+      } else {
+        notification.open({
+          message: 'User already exists!',
+          description: 'Please sign in or use any other email to sign up!',
+          style: {
+            width: 300,
+            marginLeft: 0,
+          },
+        });
+      }
+      // ================== //
+    } else {
+      // alert pwd mismatch using antd
+      notification.open({
+        message: 'Passwords do not match',
+        description: 'Please enter same password to sign up !',
+        style: {
+          width: 300,
+          marginLeft: 0,
+        },
       });
     }
-    if (!userExist) {
-      localUsers.push(user);
-      localStorage.setItem('users', JSON.stringify(localUsers));
-      setTimeout(() => {
-        // eslint-disable-next-line no-restricted-globals
-        location.replace('/signin');
-      }, 1000);
-    }
   };
+
+  // ========================= //
 
   render() {
     const {
@@ -80,70 +92,97 @@ class SignUp extends Component {
       password,
       confirmpassword,
     } = this.state;
+
     return (
       <div className="signup">
-        <form style={{ textAlign: 'center' }}>
-          <h1> SIGN UP HERE: </h1>
+        <h1 style={{ textAlign: 'center' }}> SIGN UP HERE: </h1>
+
+        <Form style={{ textAlign: 'center' }} onSubmit={this.handleSignUp}>
           <Input
             placeholder="First Name"
-            id="firstName"
+            name="firstName"
             value={firstName}
-            style={{ width: '400px' }}
-            onChange={(e) => this.setState({ firstName: e.target.value })}
+            style={{ maxWidth: '400px' }}
+            onChange={this.handleChange}
+            required
           />
           <br />
           <br />
           <Input
             placeholder="Last Name"
-            id="lastName"
+            name="lastName"
             value={lastName}
-            style={{ width: '400px' }}
-            onChange={(e) => this.setState({ lastName: e.target.value })}
+            style={{ maxWidth: '400px' }}
+            onChange={this.handleChange}
+            required
           />
           <br />
           <br />
           <Input
+            type="email"
             placeholder="Enter your EmailID"
-            id="emailID"
+            name="emailId"
             value={emailId}
-            style={{ width: '400px' }}
-            onChange={(e) => this.setState({ emailId: e.target.value })}
+            style={{ maxWidth: '400px' }}
+            onChange={this.handleChange}
             prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+            required
           />
           <br />
           <br />
-          <Input.Password
+          <Input
+            required
+            type="password"
             placeholder="password"
-            id="password"
+            name="password"
             value={password}
-            style={{ width: '400px' }}
-            onChange={(e) => this.setState({ password: e.target.value })}
+            style={{ maxWidth: '400px' }}
+            onChange={this.handleChange}
           />
           <br />
           <br />
-          <Input.Password
+          <Input
+            required
+            type="password"
+            style={{ maxWidth: '400px' }}
             placeholder="confirm password"
+            name="confirmpassword"
             value={confirmpassword}
-            style={{ width: '400px' }}
-            onChange={(e) => this.setState({ confirmpassword: e.target.value })}
+            onChange={this.handleChange}
           />
           <br />
           <br />
-          <div>
-            {' '}
-            <Button
-              className="signup-btn"
-              type="primary"
-              onClick={this.handleSignUp}
-            >
-              {' '}
-              Sign Up{' '}
-            </Button>{' '}
-          </div>
-        </form>
+          <Button htmlType="submit" className="signup-btn" type="primary">
+            Sign Up
+          </Button>
+        </Form>
       </div>
     );
   }
 }
 
-export default SignUp;
+// ================================= //
+
+const mapStateToProps = state => {
+  return {
+    users: state.global.users,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    addUser: user => {
+      dispatch({
+        type: 'SIGN_UP',
+        user,
+      });
+    },
+  };
+};
+
+// ======================== //
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(SignUp);

@@ -3,7 +3,7 @@ import { Tag, Input, Tooltip, Icon } from 'antd';
 
 export default class SelectMember extends Component {
   state = {
-   // tags: [ ],
+    // tags: [ ],
     inputVisible: false,
   };
   // handleClose = removedTag => {
@@ -11,8 +11,8 @@ export default class SelectMember extends Component {
   //   console.log(tags);
   //   this.setState({ tags });
   // };
-  handleCloseTag = (ok) => {
-    this.props.handleTagRemove()
+  handleCloseTag = ok => {
+    this.props.handleTagRemove();
   };
 
   showInput = () => {
@@ -37,28 +37,32 @@ export default class SelectMember extends Component {
      
     this.props.handleAddTag(this.state.inputValue);
    }; */
-  
+
   handleInputChange = e => {
-    this.props.handleTagChange(e.target.value)
-   // console.log(e.target.value);
+    this.props.handleTagChange(e.target.value);
+    // console.log(e.target.value);
   };
 
   handleInputEnter = () => {
     this.props.handleTagSubmit();
-    this.setState({inputVisible: false});
-  }
+    this.setState({ inputVisible: false });
+  };
 
   saveInputRef = input => (this.input = input);
   render() {
     const { inputVisible } = this.state;
     const { tagValue, tags } = this.props;
-    return ( 
-       <div>
-       <br />
+    return (
+      <div>
+        <br />
         {tags.map((tag, index) => {
           const isLongTag = tag.length > 20;
           const tagElem = (
-            <Tag key={tag} closable={true} onClose={() => this.handleCloseTag(tag)}>
+            <Tag
+              key={index}
+              closable={true}
+              onClose={() => this.handleCloseTag(tag)}
+            >
               {isLongTag ? `${tag.slice(0, 20)}...` : tag}
             </Tag>
           );
@@ -83,11 +87,14 @@ export default class SelectMember extends Component {
           />
         )}
         {!inputVisible && (
-          <Tag onClick={this.showInput} style={{ background: '#fff', borderStyle: 'dashed' }}>
+          <Tag
+            onClick={this.showInput}
+            style={{ background: '#fff', borderStyle: 'dashed' }}
+          >
             <Icon type="plus" /> Add contributor
           </Tag>
         )}
       </div>
     );
   }
-  }
+}
