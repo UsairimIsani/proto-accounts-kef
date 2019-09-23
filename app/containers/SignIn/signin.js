@@ -75,10 +75,7 @@ class SignInPage extends Component {
           <br></br>
           <br></br>
           <p>
-            If you have not signed up, click{' '}
-            <Link className="router-link" to="/signup">
-              Sign Up
-            </Link>
+            If you have not signed up, click <Link to="/signup">Sign Up</Link>
           </p>
         </Form>
       </div>
