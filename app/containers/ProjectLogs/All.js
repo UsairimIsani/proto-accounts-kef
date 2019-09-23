@@ -22,7 +22,7 @@ import { connect } from 'react-redux';
 
 import { Link } from 'react-router-dom';
 
-import { Select, Modal } from 'antd';
+import { Select, Modal, Descriptions } from 'antd';
 import './style.scss';
 
 import DeleteLog from './Delete';
@@ -33,8 +33,30 @@ import PrevLogs from './PrevLogs';
 class AllLogs extends Component {
   state = {
     projectTitle: '',
-    showLogDetails: false,
     showDeletedLogs: false,
+    logsVisibility: {},
+  };
+
+  componentDidMount = () => {
+    console.log('logg all');
+
+    if (!this.props.projects.length) {
+      this.props.history.push('/create-project');
+    }
+  };
+
+  // set initital visibility of each log to false
+
+  componentDidMount = () => {
+    const initLogVisibility = {};
+    this.props.projects.forEach(project => {
+      project.logs.forEach(log => {
+        initLogVisibility[log.id] = false;
+      });
+    });
+    this.setState({
+      logsVisibility: initLogVisibility,
+    });
   };
 
   //   ============= Filter button ============= //
@@ -63,9 +85,10 @@ class AllLogs extends Component {
     });
   };
 
-  changeLogDetailsVisibility = () => {
+  changeLogDetailsVisibility = id => {
+    const prevValue = this.state.logsVisibility[id];
     this.setState({
-      showLogDetails: !this.state.showLogDetails,
+      logsVisibility: { ...this.state.logsVisibility, [id]: !prevValue },
     });
   };
 
@@ -74,6 +97,15 @@ class AllLogs extends Component {
   handleEachLog = project => {
     const logArray = project.logs;
     if (logArray.length) {
+      {
+        /* <Descriptions>
+        <Descriptions.Item label="Contributors:" span={6}></Descriptions.Item>
+        <Descriptions.Item label="Start Date:" span={4}></Descriptions.Item>
+        <Descriptions.Item label="End Date:" span={4}></Descriptions.Item>
+        <Descriptions.Item label="Expected Cost:" span={4}></Descriptions.Item>
+      </Descriptions>; */
+      }
+
       return logArray.map(log => {
         return (
           <div key={log.id} className="border">
@@ -81,9 +113,13 @@ class AllLogs extends Component {
               <li className="log-list-item">
                 {/* ============ Show details of Log ============ */}
                 <Modal
-                  visible={this.state.showLogDetails}
-                  onCancel={this.changeLogDetailsVisibility}
-                  onOk={this.changeLogDetailsVisibility}
+                  visible={this.state.logsVisibility[log.id]}
+                  onCancel={() => {
+                    this.changeLogDetailsVisibility(log.id);
+                  }}
+                  onOk={() => {
+                    this.changeLogDetailsVisibility(log.id);
+                  }}
                 >
                   <IndividualLog
                     editable
@@ -92,17 +128,21 @@ class AllLogs extends Component {
                   />
                 </Modal>
                 {/* ====================== */}
-                <a
-                  style={{ width: '35%' }}
-                  onClick={this.changeLogDetailsVisibility}
-                >
-                  <div>
+                <a style={{ width: '35%' }}>
+                  <div
+                    //                    id={log.id}
+                    onClick={() => {
+                      this.changeLogDetailsVisibility(log.id);
+                    }}
+                  >
                     {log.item.map((item, i) => {
                       if (i < 2) {
                         return log.item[i].length < 15 ? (
                           <div key={i}>{log.item[i]}</div>
                         ) : (
-                          <div key={i}>{log.item[i].slice(15) + '...'}</div>
+                          <div key={Math.random()}>
+                            {log.item[i].slice(15) + '...'}
+                          </div>
                         );
                       } else if (i === 2) {
                         return <div>....</div>;

@@ -1,84 +1,67 @@
+/* eslint-disable no-alert */
+/* eslint-disable no-fallthrough */
 /* eslint-disable indent */
 /* eslint-disable arrow-parens */
 /* eslint-disable no-case-declarations */
-import { LOAD_REPOS_SUCCESS, LOAD_REPOS, LOAD_REPOS_ERROR } from './constants';
 
 // The initial state of the App
 export const initialState = {
-  loading: false,
-  error: false,
-  currentUser: false,
-  userData: {
-    repositories: false,
-  },
-  projects: [
-    // dummy data: ubadah has to add data here
-    {
-      title: 'first',
-      id: 1,
-      logs: [],
-      deletedLogs: [],
-    },
-    {
-      title: 'second',
-      id: 2,
-      logs: [],
-      deletedLogs: [],
-    },
-
-    {
-      title: 'third',
-      id: 3,
-      logs: [],
-      deletedLogs: [],
-    },
-    {
-      title: 'fourth',
-      id: 4,
-      logs: [],
-      deletedLogs: [],
-    },
-  ],
-
-  // data from sign up should also be available here, to be used in ProjectLogs
-  // MSW has to add data here
-  // dummy data
-  users: [
-    { name: 'Anees Hashmi', username: 'aneeshashmi' },
-    { name: 'Shehryar Wasim', username: 'MSW' },
-    { name: 'Ubadah Tanveer', username: 'sotu' },
-  ],
+  projects: [],
+  users: [],
+  // currentUser: '',
 };
 
 function appReducer(state = initialState, action) {
   switch (action.type) {
-    case LOAD_REPOS: {
-      const newState = {
+    case 'SIGN_UP':
+      const updatedUsersArray = state.users.filter(() => true);
+      updatedUsersArray.push(action.user);
+      return {
         ...state,
-        loading: true,
-        error: false,
-        userData: {
-          repositories: false,
-        },
+        users: updatedUsersArray,
       };
 
-      return newState;
-    }
-    case LOAD_REPOS_SUCCESS: {
-      const newState = {
-        ...state,
-        loading: false,
-        userData: {
-          repositories: action.repos,
-        },
-        currentUser: action.username,
-      };
-      return newState;
-    }
+    case 'LOG_IN':
+      const { email, password } = action.user;
+      const userFound = state.users.find(usr => {
+        const userEmail =
+          email.indexOf('@') === -1 ? usr.username : usr.emailId;
+        return userEmail === email;
+      });
+      if (userFound && userFound.password === password) {
+        return {
+          ...state,
+          currentUser: userFound.firstName + ' ' + userFound.lastName,
+        };
+      }
+      alert('user not found');
 
-    case LOAD_REPOS_ERROR: {
-      return { ...state, error: action.error, loading: false };
-    }
+    case 'LOG_OUT':
+      // removing the currentuser or logout
+      return {
+        ...state,
+        currentUser: '',
+      };
+
+    // ============================== //
+
+    case 'PROJECT_INFO':
+      const { inputValue, tags, dateValue, costSlider, costValue } = action;
+      const projectDetail = {
+        title: inputValue,
+        tag: tags,
+        startDate: dateValue.toString[0],
+        endDate: dateValue.toString[1],
+        cost: costSlider,
+        costUnit: costValue,
+        logs: [],
+        deletedLogs: [],
+      };
+      const newProjects = state.projects.concat([projectDetail]);
+      return {
+        ...state,
+        projects: newProjects,
+      };
 
     // ============== ProjectLogs ============= //
     case 'ADD_PROJECT_LOG':
@@ -92,7 +75,7 @@ function appReducer(state = initialState, action) {
           price,
           shop,
           payments,
-          username: 'static username',
+          username: state.currentUser,
           date: new Date(),
           id: Math.random(),
           prevLogs: [],
@@ -113,7 +96,6 @@ function appReducer(state = initialState, action) {
     // ========== Delete logs ============ //
     case 'DELETE_LOG':
       // find deleted log
-      // let deletedLog;
       const projectsCopy = state.projects.filter(() => true);
 
       const updatedProject = projectsCopy.map(project => {
@@ -162,15 +144,12 @@ function appReducer(state = initialState, action) {
             payments,
             date: new Date(),
             id,
-            username: 'static username',
+            username: state.currentUser,
             prevLogs: prevLogArray,
-            modifiedBy: 'user logged in',
+            modifiedBy: state.currentUser,
           };
           newLog.push(editedLog);
-
-          // let sortedLog = newLog.sort((a, b) => a.date - b.log);
         }
-        // console.log(newLog);
         return Object.assign({}, project, {
           logs: newLog,
         });

@@ -36,11 +36,14 @@ import configureStore from './configureStore';
 const openSansObserver = new FontFaceObserver('Open Sans', {});
 
 // When Open Sans is loaded, add a font-family using Open Sans to the body
-openSansObserver.load().then(() => {
-  document.body.classList.add('fontLoaded');
-}, () => {
-  document.body.classList.remove('fontLoaded');
-});
+openSansObserver.load().then(
+  () => {
+    document.body.classList.add('fontLoaded');
+  },
+  () => {
+    document.body.classList.remove('fontLoaded');
+  },
+);
 
 // Create redux store with history
 const initialState = {};
@@ -54,7 +57,7 @@ const render = () => {
         <App />
       </ConnectedRouter>
     </Provider>,
-    MOUNT_NODE
+    MOUNT_NODE,
   );
 };
 

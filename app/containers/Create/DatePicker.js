@@ -1,22 +1,16 @@
 import React, { Component } from 'react';
 import { DatePicker, Radio } from 'antd';
 
-const { MonthPicker, RangePicker, WeekPicker } = DatePicker;
+const { RangePicker } = DatePicker;
 export default class PickerSizes extends React.Component {
-    state = {
-      size: 'small',
-    };
-  
+  dateUpdate = (e) =>{
+    this.props.handleDateChange(e);
+  }
     render() {
-      const { size } = this.state;
       return (
         <div>
-        <br />
-          <DatePicker size={size} />
           <br />
-          <MonthPicker size={size} placeholder="Select Month" />
-          <br />
-          <RangePicker size={size} />
+          <RangePicker size= {"small"} onCalendarChange = {this.dateUpdate}/>
           <p>*end date is time estimated by contributors to complete the project.</p>
         </div>
       );
